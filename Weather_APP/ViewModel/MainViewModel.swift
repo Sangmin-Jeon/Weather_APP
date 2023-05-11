@@ -14,12 +14,12 @@ import RxRelay
 
 class MainViewModel {
     private let disposeBag = DisposeBag()
-    
-    let weatherData = BehaviorRelay<WeatherData?>(value: nil)
+
     let errorMessage = PublishSubject<String>()
-    
+    let weatherData = BehaviorRelay<WeatherData?>(value: nil)
+
     //날씨 데이터 불러오기
-    func setWeatherData(latitude: Double, longitude: Double) {
+    func getWeatherData(latitude: Double, longitude: Double) {
         NetworkManager.shared.getWeather(latitude: latitude, longitude: longitude)
             .subscribe(
                 onNext: { [weak self] weatherData in

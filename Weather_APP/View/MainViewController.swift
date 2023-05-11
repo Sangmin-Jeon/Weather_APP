@@ -9,6 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import SnapKit
+import Kingfisher
 
 class MainViewController: ViewController {
     private let currentRegion = UILabel()
@@ -27,20 +28,26 @@ class MainViewController: ViewController {
         self.setupLayout()
         self.bindData()
         // 위도, 경도 임시
-        viewModel.setWeatherData(latitude: 37.5665, longitude: 126.9780)
+        viewModel.getWeatherData(latitude: 37.5665, longitude: 126.9780)
     }
     
     // UI 작성 함수
     private func setupLayout() {
+        view.addSubview(weatherIconImageView)
         view.addSubview(currentRegion)
         view.addSubview(temperatureLabel)
         view.addSubview(pressureLabel)
         view.addSubview(humidityLabel)
         view.addSubview(descriptionLabel)
-        view.addSubview(weatherIconImageView)
+        
+        weatherIconImageView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
+            make.centerX.equalToSuperview()
+            make.width.height.equalTo(100)
+        }
         
         currentRegion.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
+            make.top.equalTo(weatherIconImageView.snp.bottom).offset(8)
             make.leading.equalToSuperview().offset(16)
         }
         
@@ -63,16 +70,21 @@ class MainViewController: ViewController {
             make.top.equalTo(humidityLabel.snp.bottom).offset(8)
             make.leading.equalToSuperview().offset(16)
         }
-        
-        weatherIconImageView.snp.makeConstraints { make in
-            make.top.equalTo(descriptionLabel.snp.bottom).offset(16)
-            make.centerX.equalToSuperview()
-            make.width.height.equalTo(100)
-        }
+    
     }
     
     // 데이터 바인딩
     private func bindData() {
+        viewModel.weatherData
+            .compactMap { $0 }
+            .subscribe(onNext: { [weak self] data in
+                if let first = data.weather.first,
+                   let url = URL(string: "https://openweathermap.org/img/wn/\(first.icon)@2x.png") {
+                    self?.weatherIconImageView.kf.setImage(with: url)
+                }
+            })
+            .disposed(by: disposeBag)
+        
         viewModel.weatherData
             .compactMap { $0 }
             .map { "지역 : \($0.name)" }
@@ -100,14 +112,6 @@ class MainViewController: ViewController {
         viewModel.weatherData
             .compactMap { $0?.weather.first?.description }
             .bind(to: descriptionLabel.rx.text)
-            .disposed(by: disposeBag)
-        
-        viewModel.weatherData
-            .compactMap { $0?.weather.first?.icon }
-            .subscribe(onNext: { [weak self] icon in
-                
-                
-            })
             .disposed(by: disposeBag)
         
         viewModel.errorMessage

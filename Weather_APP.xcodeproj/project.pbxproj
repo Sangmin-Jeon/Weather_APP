@@ -132,7 +132,6 @@
 		5C1700022A0BC55800B943C5 /* Weather_APP */ = {
 			isa = PBXGroup;
 			children = (
-				5C695FD12A0CAEF400A49688 /* Common */,
 				5C2A717E2A0BEFF7002D90F0 /* Model */,
 				5C2A71752A0BCA3A002D90F0 /* Net */,
 				5C2A71792A0BE73F002D90F0 /* ViewModel */,
@@ -211,13 +210,6 @@
 				5C2A717F2A0BF032002D90F0 /* WeatherData.swift */,
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		5C695FD12A0CAEF400A49688 /* Common */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Common;
 			sourceTree = "<group>";
 		};
 		5E9E2B1CB961C08ACB74CE84 /* Frameworks */ = {

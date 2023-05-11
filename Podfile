@@ -9,6 +9,7 @@ target 'Weather_APP' do
   pod 'RxCocoa', '~> 6.2.0'
   pod 'Alamofire', '~> 5.4.0'
   pod 'SnapKit', '~> 5.0.1'
+  pod 'Kingfisher', '7.6.1'
 
   # Pods for Weather_APP
 
