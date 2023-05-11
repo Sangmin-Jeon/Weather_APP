@@ -146,6 +146,7 @@
 				5C1700142A0BC55900B943C5 /* Info.plist */,
 				5C17000C2A0BC55800B943C5 /* Weather_APP.xcdatamodeld */,
 				5C2A71812A0C97F4002D90F0 /* Config.xcconfig */,
+				5C378DC32A0CA4D900CE3431 /* .gitignore */,
 			);
 			path = Weather_APP;
 			sourceTree = "<group>";
@@ -170,7 +171,6 @@
 		5C17FFF72A0BC55800B943C5 = {
 			isa = PBXGroup;
 			children = (
-				5C378DC32A0CA4D900CE3431 /* .gitignore */,
 				5C1700022A0BC55800B943C5 /* Weather_APP */,
 				5C17001C2A0BC55900B943C5 /* Weather_APPTests */,
 				5C1700262A0BC55900B943C5 /* Weather_APPUITests */,
