@@ -39,7 +39,8 @@ extension NetworkManager {
         let parameters: Parameters = [
             "lat": latitude,
             "lon": longitude,
-            "appid": APIManager.shared.apiKey
+            "appid": APIManager.shared.apiKey,
+            "lang": "kr"
         ]
         
         return NetworkManager.shared.get(path: path, parameters: parameters)
