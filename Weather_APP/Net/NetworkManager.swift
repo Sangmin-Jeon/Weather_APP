@@ -9,14 +9,23 @@ import Foundation
 import RxSwift
 import Alamofire
 
-let apiKey = ""
-
 class NetworkManager {
     
     private let baseURL = "https://api.openweathermap.org"
     
     static let shared = NetworkManager()
     
+    func get<T: Codable>(path: String, parameters: Parameters) -> Observable<T> {
+        return request(path: path, method: .get, parameters: parameters)
+    }
+    
+    func post<T: Codable>(path: String, parameters: Parameters) -> Observable<T> {
+        return request(path: path, method: .post, parameters: parameters)
+    }
+    
+}
+
+extension NetworkManager {
     private func request<T: Codable>(path: String,
                                      method: HTTPMethod,
                                      parameters: Parameters? = nil) -> Observable<T> {
@@ -35,6 +44,7 @@ class NetworkManager {
                         observer.onNext(data)
                         observer.onCompleted()
                     case .failure(let error):
+                        dump(error)
                         observer.onError(error)
                     }
                 }
@@ -42,18 +52,6 @@ class NetworkManager {
                 request.cancel()
             }
         }
-    }
-    
-}
-
-extension NetworkManager {
-    
-    func get<T: Codable>(path: String, parameters: Parameters) -> Observable<T> {
-        return request(path: path, method: .get, parameters: parameters)
-    }
-    
-    func post<T: Codable>(path: String, parameters: Parameters) -> Observable<T> {
-        return request(path: path, method: .post, parameters: parameters)
     }
     
 }
