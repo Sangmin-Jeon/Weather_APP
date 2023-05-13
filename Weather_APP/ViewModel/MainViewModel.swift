@@ -16,7 +16,7 @@ class MainViewModel {
     private let disposeBag = DisposeBag()
 
     let errorMessage = PublishSubject<String>()
-    let weatherData = BehaviorRelay<WeatherData?>(value: nil)
+    let weatherData = BehaviorRelay<WeatherModel?>(value: nil)
 
     //날씨 데이터 불러오기
     func getWeatherData(latitude: Double, longitude: Double) {
@@ -31,10 +31,15 @@ class MainViewModel {
             )
             .disposed(by: disposeBag)
     }
+     
+    func getHourlyWeatherData() {
+        
+    }
 }
 
 extension NetworkManager {
-    func getWeather(latitude: Double, longitude: Double) -> Observable<WeatherData> {
+    // MARK: 현재 날씨
+    func getWeather(latitude: Double, longitude: Double) -> Observable<WeatherModel> {
         let path = String("/data/2.5/weather")
         let parameters: Parameters = [
             "lat": latitude,
@@ -43,6 +48,18 @@ extension NetworkManager {
             "lang": "kr"
         ]
         
+        return NetworkManager.shared.get(path: path, parameters: parameters)
+    }
+    
+    // MARK: 오늘 시간대별 날씨
+    func getHourlyWeather(latitude: Double, longitude: Double) -> Observable<HourlyWeatherModel> {
+        let path = String("/data/2.5/forecast/hourly")
+        let parameters: Parameters = [
+            "lat": latitude,
+            "lon": longitude,
+            "appid": APIManager.shared.apiKey,
+            "lang": "kr"
+        ]
         return NetworkManager.shared.get(path: path, parameters: parameters)
     }
 }
