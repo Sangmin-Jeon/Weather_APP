@@ -1,5 +1,5 @@
 //
-//  HourlyWeatherModel.swift
+//  ForecastWeatherModel.swift
 //  Weather_APP
 //
 //  Created by 전상민 on 2023/05/13.
@@ -48,7 +48,7 @@
 
 import Foundation
 
-struct HourlyWeatherModel: Codable {
+struct ForecastWeatherModel: Codable {
     let cod: String
     let message: Double
     let cnt: Int

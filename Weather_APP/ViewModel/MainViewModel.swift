@@ -33,7 +33,7 @@ class MainViewModel {
     }
      
     func getHourlyWeatherData(latitude: Double, longitude: Double) {
-        NetworkManager.shared.getHourlyWeather(latitude: latitude, longitude: longitude)
+        NetworkManager.shared.getForecastWeather(latitude: latitude, longitude: longitude)
             .subscribe(
                 onNext: { [weak self] weatherData in
                     
@@ -61,8 +61,8 @@ extension NetworkManager {
     }
     
     // MARK: 오늘 시간대별 날씨
-    func getHourlyWeather(latitude: Double, longitude: Double) -> Observable<HourlyWeatherModel> {
-        let path = String("/data/2.5/forecast")
+    func getForecastWeather(latitude: Double, longitude: Double) -> Observable<ForecastWeatherModel> {
+        let path = String("/data/2.5/forec")
         let parameters: Parameters = [
             "lat": latitude,
             "lon": longitude,
