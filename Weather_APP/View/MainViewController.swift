@@ -159,14 +159,14 @@ class MainViewController: ViewController {
             .disposed(by: disposeBag)
         
         viewModel.errorMessage
-            .flatMap { [weak self] errorMessage -> Observable<Bool> in
+            .flatMap { [weak self] errorMessage -> Observable<PopupType> in
                 guard let self = self else { return .empty() }
                 return self.showPopup(title: errorMessage,
-                                      message: errorMessage,
+                                      message: "",
                                       confirm: "확인")
             }
             .subscribe(onNext: { state in
-                if state {
+                if state == .cancel {
                     
                 }
             })

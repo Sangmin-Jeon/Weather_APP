@@ -9,12 +9,17 @@ import Foundation
 import UIKit
 import RxSwift
 
+enum PopupType {
+    case confirm
+    case cancel
+}
+
 extension UIViewController {
-    public func showPopup(title: String, message: String, confirm: String) -> Observable<Bool> {
+    func showPopup(title: String, message: String, confirm: String) -> Observable<PopupType> {
         return Observable.create { [weak self] observer -> Disposable in
             let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
             let confirmAction = UIAlertAction(title: confirm, style: .default) { _ in
-                observer.onNext(true)
+                observer.onNext(.confirm)
                 observer.onCompleted()
             }
             alertController.addAction(confirmAction)
@@ -27,16 +32,18 @@ extension UIViewController {
         }
     }
     
-    public func showPopup(title: String, message: String, confirm: String, cancel: String) -> Observable<Bool> {
+    func showPopup(title: String, message: String, confirm: String, cancel: String) -> Observable<PopupType> {
         return Observable.create { [weak self] observer -> Disposable in
             let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
             let confirmAction = UIAlertAction(title: confirm, style: .default) { _ in
-                observer.onNext(true)
+                observer.onNext(.confirm)
                 observer.onCompleted()
             }
             alertController.addAction(confirmAction)
             
             let cancelAction = UIAlertAction(title: cancel, style: .destructive) { _ in
+                observer.onNext(.cancel)
+                observer.onCompleted()
             }
             alertController.addAction(cancelAction)
             

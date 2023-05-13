@@ -62,7 +62,7 @@ extension NetworkManager {
     
     // MARK: 오늘 시간대별 날씨
     func getForecastWeather(latitude: Double, longitude: Double) -> Observable<ForecastWeatherModel> {
-        let path = String("/data/2.5/forec")
+        let path = String("/data/2.5/forecast")
         let parameters: Parameters = [
             "lat": latitude,
             "lon": longitude,
