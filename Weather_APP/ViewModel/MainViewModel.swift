@@ -32,8 +32,17 @@ class MainViewModel {
             .disposed(by: disposeBag)
     }
      
-    func getHourlyWeatherData() {
-        
+    func getHourlyWeatherData(latitude: Double, longitude: Double) {
+        NetworkManager.shared.getHourlyWeather(latitude: latitude, longitude: longitude)
+            .subscribe(
+                onNext: { [weak self] weatherData in
+                    
+                },
+                onError: { [weak self] error in
+                    self?.errorMessage.onNext(error.localizedDescription)
+                }
+            )
+            .disposed(by: disposeBag)
     }
 }
 
@@ -53,7 +62,7 @@ extension NetworkManager {
     
     // MARK: 오늘 시간대별 날씨
     func getHourlyWeather(latitude: Double, longitude: Double) -> Observable<HourlyWeatherModel> {
-        let path = String("/data/2.5/forecast/hourly")
+        let path = String("/data/2.5/forecast")
         let parameters: Parameters = [
             "lat": latitude,
             "lon": longitude,

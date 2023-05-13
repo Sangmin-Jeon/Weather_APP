@@ -59,6 +59,7 @@ class MainViewController: ViewController {
         self.bindData()
         // 위도, 경도 임시
         viewModel.getWeatherData(latitude: 37.5665, longitude: 126.9780)
+        viewModel.getHourlyWeatherData(latitude: 37.5665, longitude: 126.9780)
     }
     
     // UI 작성 함수
