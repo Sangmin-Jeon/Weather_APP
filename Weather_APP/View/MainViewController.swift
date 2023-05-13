@@ -12,13 +12,43 @@ import SnapKit
 import Kingfisher
 
 class MainViewController: ViewController {
-    private let currentRegion = UILabel()
-    private let temperatureLabel = UILabel()
-    private let pressureLabel = UILabel()
-    private let humidityLabel = UILabel()
-    private let descriptionLabel = UILabel()
-    private let weatherIconImageView = UIImageView()
-
+    private let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.alwaysBounceVertical = false
+        scrollView.isScrollEnabled = true
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+    private let contentView: UIView = {
+        let contentView = UIView(frame: CGRect.zero)
+        return contentView
+    }()
+    
+    private let currentRegion: UILabel = { // 지역이름
+        let currentRegion = UILabel()
+        return currentRegion
+    }()
+    private let temperatureLabel: UILabel = { // 기온
+        let temperatureLabel = UILabel()
+        return temperatureLabel
+    }()
+    private let pressureLabel: UILabel = { // 기압
+        let pressureLabel = UILabel()
+        return pressureLabel
+    }()
+    private let humidityLabel: UILabel = { // 습도
+        let humidityLabel = UILabel()
+        return humidityLabel
+    }()
+    private let descriptionLabel: UILabel = { // 날씨 정보
+        let descriptionLabel = UILabel()
+        return descriptionLabel
+    }()
+    private let weatherIconImageView: UIImageView = { // 날씨 아이콘 이미지
+        let weatherIconImageView = UIImageView()
+        return weatherIconImageView
+    }()
     private let viewModel = MainViewModel()
     private let disposeBag = DisposeBag()
     
@@ -33,15 +63,28 @@ class MainViewController: ViewController {
     
     // UI 작성 함수
     private func setupLayout() {
-        view.addSubview(weatherIconImageView)
-        view.addSubview(currentRegion)
-        view.addSubview(temperatureLabel)
-        view.addSubview(pressureLabel)
-        view.addSubview(humidityLabel)
-        view.addSubview(descriptionLabel)
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        contentView.addSubview(weatherIconImageView)
+        contentView.addSubview(currentRegion)
+        contentView.addSubview(temperatureLabel)
+        contentView.addSubview(pressureLabel)
+        contentView.addSubview(humidityLabel)
+        contentView.addSubview(descriptionLabel)
+        
+        scrollView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.leading.trailing.bottom.equalToSuperview()
+        }
+        
+        contentView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.width.equalToSuperview()
+            make.bottom.equalTo(descriptionLabel.snp.bottom).offset(16)
+        }
         
         weatherIconImageView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
+            make.top.equalTo(contentView.snp.top).offset(20)
             make.centerX.equalToSuperview()
             make.width.height.equalTo(100)
         }
