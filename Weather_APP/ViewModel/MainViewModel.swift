@@ -66,7 +66,7 @@ extension NetworkManager {
             "lang": "kr"
         ]
         
-        return NetworkManager.shared.get(path: path, parameters: parameters)
+        return get(path: path, parameters: parameters)
     }
     
     // MARK: 5일간 날씨 예보
@@ -78,6 +78,6 @@ extension NetworkManager {
             "appid": APIManager.shared.apiKey,
             "lang": "kr"
         ]
-        return NetworkManager.shared.get(path: path, parameters: parameters)
+        return get(path: path, parameters: parameters)
     }
 }
