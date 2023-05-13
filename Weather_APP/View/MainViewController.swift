@@ -149,7 +149,7 @@ class MainViewController: ViewController {
         // 기온 정보
         viewModel.weatherData
             .compactMap { $0 }
-            .map { "기온: \($0.main.temp)°C" }
+            .map { "기온: \($0.main.temp.kelvinToCelsius())°C" }
             .bind(to: temperatureLabel.rx.text)
             .disposed(by: disposeBag)
         
