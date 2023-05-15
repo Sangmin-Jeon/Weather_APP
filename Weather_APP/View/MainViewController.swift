@@ -12,6 +12,10 @@ import SnapKit
 import Kingfisher
 
 class MainViewController: ViewController {
+    private let headerView: UIView = {
+        let headerView = UIView()
+        return headerView
+    }()
     private let currentRegion: UILabel = { // 지역이름
         let currentRegion = UILabel()
         return currentRegion
@@ -40,7 +44,7 @@ class MainViewController: ViewController {
     private let weatherTableView: UITableView = { // 날씨 List
         let weatherTableView = UITableView()
         weatherTableView.rowHeight = UITableView.automaticDimension
-        weatherTableView.isScrollEnabled = false
+        weatherTableView.isScrollEnabled = true
         weatherTableView.showsVerticalScrollIndicator = false
         return weatherTableView
     }()
@@ -52,6 +56,7 @@ class MainViewController: ViewController {
         super.viewDidLoad()
         
         weatherTableView.register(WeatherTableViewCell.self, forCellReuseIdentifier: "WeatherTableViewCell")
+        weatherTableView.separatorStyle = .none
 
         self.setupLayout()
         self.bindData()
@@ -64,64 +69,58 @@ class MainViewController: ViewController {
 
     
     private func setupLayout() {
-        view.addSubview(scrollView)
-        scrollView.addSubview(contentView)
-        contentView.addSubview(weatherIconImageView)
-        contentView.addSubview(currentRegion)
-        contentView.addSubview(temperatureLabel)
-        contentView.addSubview(pressureLabel)
-        contentView.addSubview(humidityLabel)
-        contentView.addSubview(descriptionLabel)
-        contentView.addSubview(weatherTableView)
-        
-        scrollView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide)
-            make.leading.trailing.bottom.equalToSuperview()
-        }
-        
-        contentView.snp.makeConstraints { make in
+        view.addSubview(weatherTableView)
+        weatherTableView.addSubview(headerView)
+        headerView.addSubview(weatherIconImageView)
+        headerView.addSubview(currentRegion)
+        headerView.addSubview(temperatureLabel)
+        headerView.addSubview(pressureLabel)
+        headerView.addSubview(humidityLabel)
+        headerView.addSubview(descriptionLabel)
+
+        weatherTableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
+        }
+
+        headerView.snp.makeConstraints { make in
+            make.top.equalTo(weatherTableView)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(300)
             make.width.equalToSuperview()
         }
         
         weatherIconImageView.snp.makeConstraints { make in
-            make.top.equalTo(contentView.snp.top).offset(20)
+            make.top.equalToSuperview().offset(20)
             make.centerX.equalToSuperview()
             make.width.height.equalTo(100)
         }
         
         currentRegion.snp.makeConstraints { make in
             make.top.equalTo(weatherIconImageView.snp.bottom).offset(8)
-            make.leading.equalToSuperview().offset(16)
+            make.leading.equalToSuperview().offset(leftOffset)
         }
         
         temperatureLabel.snp.makeConstraints { make in
             make.top.equalTo(currentRegion.snp.bottom).offset(8)
-            make.leading.equalToSuperview().offset(16)
+            make.leading.equalToSuperview().offset(leftOffset)
         }
         
         pressureLabel.snp.makeConstraints { make in
             make.top.equalTo(temperatureLabel.snp.bottom).offset(8)
-            make.leading.equalToSuperview().offset(16)
+            make.leading.equalToSuperview().offset(leftOffset)
         }
         
         humidityLabel.snp.makeConstraints { make in
             make.top.equalTo(pressureLabel.snp.bottom).offset(8)
-            make.leading.equalToSuperview().offset(16)
+            make.leading.equalToSuperview().offset(leftOffset)
         }
         
         descriptionLabel.snp.makeConstraints { make in
             make.top.equalTo(humidityLabel.snp.bottom).offset(8)
-            make.leading.equalToSuperview().offset(16)
+            make.leading.equalToSuperview().offset(leftOffset)
         }
         
-        weatherTableView.snp.makeConstraints { make in
-            make.top.equalTo(descriptionLabel.snp.bottom).offset(8)
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().offset(-16)
-            make.bottom.equalToSuperview().offset(-16)
-            make.height.equalTo(0)
-        }
+        weatherTableView.tableHeaderView = headerView
         
     }
     
@@ -215,7 +214,7 @@ class MainViewController: ViewController {
         viewModel.weatherList
             .subscribe { [weak self] item in
                 guard let self = self else { return }
-                self.setTableViewDynamicHeight(tableView: weatherTableView)
+                
             }
             .disposed(by: disposeBag)
         

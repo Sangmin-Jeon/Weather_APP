@@ -32,8 +32,8 @@ class WeatherTableViewCell: UITableViewCell {
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(contentView.snp.top).offset(8)
             make.bottom.equalTo(contentView.snp.bottom).offset(-8)
-            make.leading.equalTo(contentView.snp.leading)
-            make.trailing.equalTo(contentView.snp.trailing)
+            make.leading.equalTo(contentView.snp.leading).offset(leftOffset)
+            make.trailing.equalTo(contentView.snp.trailing).offset(rightOffset)
             make.height.greaterThanOrEqualTo(44)
         }
     }
