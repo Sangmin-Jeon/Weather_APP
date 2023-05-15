@@ -38,7 +38,10 @@ class MainViewModel {
         NetworkManager.shared.getForecastWeather(latitude: latitude, longitude: longitude)
             .subscribe(
                 onNext: { [weak self] weatherData in
-                    self?.weatherList.accept(weatherData.list)
+                    guard let self = self else { return }
+                    self.weatherList.accept(weatherData.list)
+                    self.setDateList(items: weatherData.list)
+                    
                 },
                 onError: { [weak self] error in
                     self?.errorMessage.onNext(error.localizedDescription)
@@ -49,10 +52,30 @@ class MainViewModel {
     
     // 선택된 Cell의 항목 처리
     func getSelctedItemIndex(index: Int) {
-        let item = self.weatherList.value[index]
-        print(item)
+        let _ = self.weatherList.value[index]
+        
         
     }
+    
+    // 일간 시간대별 예보 일별로 묶음 리스트
+    func setDateList(items: [ForecastWeatherModel.WeatherItem]) {
+        var result = [String: [ForecastWeatherModel.WeatherItem]]()
+        items.forEach { item in
+            let dateString = item.dt_txt.toDateString()
+            if let arr = result[dateString] {
+                var newArr = arr
+                newArr.append(item)
+                result.updateValue(newArr, forKey: dateString)
+            }
+            else {
+                result.updateValue([item], forKey: dateString)
+            }
+        }
+        let sortedResult = result.sorted(by: { $0.key < $1.key })
+        dump(sortedResult)
+        
+    }
+    
 }
 
 extension NetworkManager {

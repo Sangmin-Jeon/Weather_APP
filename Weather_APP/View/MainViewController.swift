@@ -210,14 +210,6 @@ class MainViewController: ViewController {
             })
             .disposed(by: disposeBag)
         
-        // weatherList 상태 구독
-        viewModel.weatherList
-            .subscribe { [weak self] item in
-                guard let self = self else { return }
-                
-            }
-            .disposed(by: disposeBag)
-        
             
     }
     
