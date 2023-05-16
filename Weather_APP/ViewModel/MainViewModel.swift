@@ -17,7 +17,7 @@ class MainViewModel {
 
     let errorMessage = PublishSubject<String>()
     let weatherData = BehaviorRelay<WeatherModel?>(value: nil)
-    var weatherList = BehaviorRelay<[ForecastWeatherModel.WeatherItem]>(value: [])
+    var weatherList = BehaviorRelay<[String : [ForecastWeatherModel.WeatherItem]]>(value: [:])
 
     // 현재 날씨 데이터 불러오기
     func getWeatherData(latitude: Double, longitude: Double) {
@@ -39,7 +39,7 @@ class MainViewModel {
             .subscribe(
                 onNext: { [weak self] weatherData in
                     guard let self = self else { return }
-                    self.weatherList.accept(weatherData.list)
+                    // self.weatherList.accept(weatherData.list)
                     self.setDateList(items: weatherData.list)
                     
                 },
@@ -52,7 +52,7 @@ class MainViewModel {
     
     // 선택된 Cell의 항목 처리
     func getSelctedItemIndex(index: Int) {
-        let _ = self.weatherList.value[index]
+        // let _ = self.weatherList.value[index]
         
         
     }
@@ -71,8 +71,10 @@ class MainViewModel {
                 result.updateValue([item], forKey: dateString)
             }
         }
-        let sortedResult = result.sorted(by: { $0.key < $1.key })
-        dump(sortedResult)
+        // let sortedResult = result.sorted(by: { $0.key < $1.key })
+        // let dictResult = Dictionary(uniqueKeysWithValues: sortedResult)
+        
+        weatherList.accept(result)
         
     }
     

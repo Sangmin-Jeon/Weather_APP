@@ -39,8 +39,9 @@ class WeatherTableViewCell: UITableViewCell {
     }
     
     // Cell 항목 업데이트
-    func updateCell(item: ForecastWeatherModel.WeatherItem) {
-        self.titleLabel.text = item.dt_txt
+    func updateCell(key: String, value: [ForecastWeatherModel.WeatherItem]) {
+        self.titleLabel.text = key
+        
         
     }
     
