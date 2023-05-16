@@ -11,6 +11,8 @@ target 'Weather_APP' do
   pod 'SnapKit', '~> 5.0.1'
   pod 'Kingfisher', '7.6.1'
 
+  pod 'lottie-ios'
+
   # Pods for Weather_APP
 
   target 'Weather_APPTests' do

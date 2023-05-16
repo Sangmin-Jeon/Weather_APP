@@ -10,31 +10,47 @@ import RxSwift
 import RxCocoa
 import SnapKit
 import Kingfisher
+import Lottie
 
 class MainViewController: ViewController {
     private let headerView: UIView = {
         let headerView = UIView()
         return headerView
     }()
+    private let cardView: UIView = {
+        let cardView = UIView()
+        cardView.backgroundColor = .blue.withAlphaComponent(0.8)
+        cardView.layer.cornerRadius = CGFloat(15)
+        // cardView.clipsToBounds = true
+        cardView.layer.shadowColor = UIColor.black.cgColor
+        cardView.layer.shadowOpacity = 0.5
+        cardView.layer.shadowRadius = 10
+        return cardView
+    }()
     private let currentRegion: UILabel = { // 지역이름
         let currentRegion = UILabel()
         currentRegion.font = UIFont.systemFont(ofSize: 40, weight: .bold)
+        currentRegion.textColor = .white
         return currentRegion
     }()
     private let temperatureLabel: UILabel = { // 기온
         let temperatureLabel = UILabel()
+        temperatureLabel.textColor = .white
         return temperatureLabel
     }()
     private let pressureLabel: UILabel = { // 기압
         let pressureLabel = UILabel()
+        pressureLabel.textColor = .white
         return pressureLabel
     }()
     private let humidityLabel: UILabel = { // 습도
         let humidityLabel = UILabel()
+        humidityLabel.textColor = .white
         return humidityLabel
     }()
     private let descriptionLabel: UILabel = { // 날씨 정보
         let descriptionLabel = UILabel()
+        descriptionLabel.textColor = .white
         return descriptionLabel
     }()
     private let weatherIconImageView: UIImageView = { // 날씨 아이콘 이미지
@@ -50,6 +66,13 @@ class MainViewController: ViewController {
         weatherTableView.bounces = false
         return weatherTableView
     }()
+    private let animationView: LottieAnimationView = {
+        // Lottie파일 다운받아 사용
+        let animationView = LottieAnimationView(name: "CardBackgroundLottie")
+        animationView.layer.cornerRadius = CGFloat(15)
+        animationView.contentMode = .scaleAspectFill
+        return animationView
+    }()
     
     private let viewModel = MainViewModel()
     private let disposeBag = DisposeBag()
@@ -58,27 +81,34 @@ class MainViewController: ViewController {
         super.viewDidLoad()
         
         weatherTableView.register(WeatherTableViewCell.self, forCellReuseIdentifier: "WeatherTableViewCell")
+        weatherTableView.backgroundColor = .white.withAlphaComponent(0.5)
         weatherTableView.separatorStyle = .none
 
         self.setupLayout()
         self.bindData()
         self.bindTableView()
         
+        self.animationView.play()
+        self.animationView.loopMode = .loop
+        
         // 위도, 경도 임시
         viewModel.getWeatherData(latitude: 37.5665, longitude: 126.9780)
         viewModel.getHourlyWeatherData(latitude: 37.5665, longitude: 126.9780)
+        
     }
 
     
     private func setupLayout() {
         view.addSubview(weatherTableView)
         weatherTableView.addSubview(headerView)
-        headerView.addSubview(weatherIconImageView)
-        headerView.addSubview(currentRegion)
-        headerView.addSubview(temperatureLabel)
-        headerView.addSubview(pressureLabel)
-        headerView.addSubview(humidityLabel)
-        headerView.addSubview(descriptionLabel)
+        headerView.addSubview(cardView)
+        cardView.addSubview(animationView)
+        cardView.addSubview(weatherIconImageView)
+        cardView.addSubview(currentRegion)
+        cardView.addSubview(temperatureLabel)
+        cardView.addSubview(pressureLabel)
+        cardView.addSubview(humidityLabel)
+        cardView.addSubview(descriptionLabel)
 
         weatherTableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -87,6 +117,17 @@ class MainViewController: ViewController {
         headerView.snp.makeConstraints { make in
             make.top.equalTo(weatherTableView)
             make.leading.trailing.equalToSuperview()
+            make.height.equalTo(300)
+            make.width.equalToSuperview()
+        }
+        
+        cardView.snp.makeConstraints { make in
+            make.height.equalTo(300)
+            make.width.equalTo(headerView).offset(rightOffset * 2)
+            make.centerX.equalToSuperview()
+        }
+        
+        animationView.snp.makeConstraints { make in
             make.height.equalTo(300)
             make.width.equalToSuperview()
         }
@@ -184,6 +225,7 @@ class MainViewController: ViewController {
                 cellType: WeatherTableViewCell.self)
             ) { _, element, cell in
                 let (key, value) = element
+                cell.backgroundColor = .clear
                 cell.updateCell(key: key, value: value)
                 
             }
