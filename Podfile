@@ -6,6 +6,7 @@ target 'Weather_APP' do
   use_frameworks!
 
   pod 'RxSwift', '~> 6.2.0'
+  pod 'RxDataSources'
   pod 'RxCocoa', '~> 6.2.0'
   pod 'Alamofire', '~> 5.4.0'
   pod 'SnapKit', '~> 5.0.1'

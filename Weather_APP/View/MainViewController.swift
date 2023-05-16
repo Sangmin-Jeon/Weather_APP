@@ -8,6 +8,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import RxDataSources
 import SnapKit
 import Kingfisher
 import Lottie
@@ -76,6 +77,11 @@ class MainViewController: ViewController {
     }()
     private let weatherIconImageView: UIImageView = { // 날씨 아이콘 이미지
         let weatherIconImageView = UIImageView()
+        weatherIconImageView.layer.shadowColor = UIColor.black.cgColor
+        weatherIconImageView.layer.shadowOffset = CGSize(width: 0, height: 1)
+        weatherIconImageView.layer.shadowOpacity = 0.5
+        weatherIconImageView.layer.shadowRadius = 1
+        weatherIconImageView.contentMode = .scaleAspectFill
         return weatherIconImageView
     }()
     
