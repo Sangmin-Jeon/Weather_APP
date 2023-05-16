@@ -21,36 +21,57 @@ class MainViewController: ViewController {
         let cardView = UIView()
         cardView.backgroundColor = .blue.withAlphaComponent(0.8)
         cardView.layer.cornerRadius = CGFloat(15)
-        // cardView.clipsToBounds = true
         cardView.layer.shadowColor = UIColor.black.cgColor
+        cardView.layer.shadowOffset = CGSize(width: 0, height: 2)
         cardView.layer.shadowOpacity = 0.5
-        cardView.layer.shadowRadius = 10
+        cardView.layer.shadowRadius = 4
+        // cardView.clipsToBounds = true // true일때 shadow 잘림
         return cardView
     }()
     private let currentRegion: UILabel = { // 지역이름
         let currentRegion = UILabel()
         currentRegion.font = UIFont.systemFont(ofSize: 40, weight: .bold)
         currentRegion.textColor = .white
+        currentRegion.layer.shadowColor = UIColor.black.cgColor
+        currentRegion.layer.shadowOffset = CGSize(width: 0, height: 1)
+        currentRegion.layer.shadowOpacity = 0.5
+        currentRegion.layer.shadowRadius = 1
         return currentRegion
     }()
     private let temperatureLabel: UILabel = { // 기온
         let temperatureLabel = UILabel()
         temperatureLabel.textColor = .white
+        temperatureLabel.layer.shadowColor = UIColor.black.cgColor
+        temperatureLabel.layer.shadowOffset = CGSize(width: 0, height: 1)
+        temperatureLabel.layer.shadowOpacity = 0.5
+        temperatureLabel.layer.shadowRadius = 1
         return temperatureLabel
     }()
     private let pressureLabel: UILabel = { // 기압
         let pressureLabel = UILabel()
         pressureLabel.textColor = .white
+        pressureLabel.layer.shadowColor = UIColor.black.cgColor
+        pressureLabel.layer.shadowOffset = CGSize(width: 0, height: 1)
+        pressureLabel.layer.shadowOpacity = 0.5
+        pressureLabel.layer.shadowRadius = 1
         return pressureLabel
     }()
     private let humidityLabel: UILabel = { // 습도
         let humidityLabel = UILabel()
         humidityLabel.textColor = .white
+        humidityLabel.layer.shadowColor = UIColor.black.cgColor
+        humidityLabel.layer.shadowOffset = CGSize(width: 0, height: 1)
+        humidityLabel.layer.shadowOpacity = 0.5
+        humidityLabel.layer.shadowRadius = 1
         return humidityLabel
     }()
     private let descriptionLabel: UILabel = { // 날씨 정보
         let descriptionLabel = UILabel()
         descriptionLabel.textColor = .white
+        descriptionLabel.layer.shadowColor = UIColor.black.cgColor
+        descriptionLabel.layer.shadowOffset = CGSize(width: 0, height: 1)
+        descriptionLabel.layer.shadowOpacity = 0.5
+        descriptionLabel.layer.shadowRadius = 1
         return descriptionLabel
     }()
     private let weatherIconImageView: UIImageView = { // 날씨 아이콘 이미지
@@ -68,7 +89,7 @@ class MainViewController: ViewController {
     }()
     private let animationView: LottieAnimationView = {
         // Lottie파일 다운받아 사용
-        let animationView = LottieAnimationView(name: "CardBackgroundLottie")
+        let animationView = LottieAnimationView(name: "backgroundLottie")
         animationView.layer.cornerRadius = CGFloat(15)
         animationView.contentMode = .scaleAspectFill
         return animationView
@@ -95,6 +116,12 @@ class MainViewController: ViewController {
         viewModel.getWeatherData(latitude: 37.5665, longitude: 126.9780)
         viewModel.getHourlyWeatherData(latitude: 37.5665, longitude: 126.9780)
         
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        self.animationView.stop()
     }
 
     
