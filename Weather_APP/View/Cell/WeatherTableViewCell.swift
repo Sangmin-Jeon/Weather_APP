@@ -42,7 +42,6 @@ class WeatherTableViewCell: UITableViewCell {
     func updateCell(key: String, value: [ForecastWeatherModel.WeatherItem]) {
         self.titleLabel.text = key
         
-        
     }
     
 }

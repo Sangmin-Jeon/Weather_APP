@@ -202,7 +202,7 @@ class MainViewController: ViewController {
     
     // MARK: 현재 날씨데이터 바인딩
     private func bindData() {
-        // 날씨 아미지 표시
+        // 현재 날씨 정보 표시
         viewModel.weatherData
             .compactMap { $0 }
             .subscribe(onNext: { [weak self] data in
@@ -213,8 +213,8 @@ class MainViewController: ViewController {
                     
                     self.currentRegion.text = data.name
                     self.temperatureLabel.text = "온도 \(data.main.temp.kelvinToCelsius())°C"
-                    self.pressureLabel.text = "\(data.main.pressure) hPa"
-                    self.humidityLabel.text = "\(data.main.humidity)%"
+                    self.pressureLabel.text = "습도 \(data.main.pressure) hPa"
+                    self.humidityLabel.text = "기압 \(data.main.humidity)%"
                     self.descriptionLabel.text = "현재 날씨 \(String(first.description))입니다."
                 }
             })
@@ -248,33 +248,57 @@ class MainViewController: ViewController {
     
     }
     
+}
+
+extension MainViewController {
     // MARK: 테이블 뷰 데이터 바인딩
     func bindTableView() {
-        // weatherList, weatherTableView 데이터 바인딩
+        // weatherSections, 테이블뷰에 바인딩
+        let dataSource = RxTableViewSectionedReloadDataSource<WeatherSectionModel>(configureCell: { (_, tableView, indexPath, element) in
+            let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherTableViewCell") as! WeatherTableViewCell
+            cell.updateCell(key: element.date, value: element.weatherItems)
+            return cell
+        }, titleForHeaderInSection: { dataSource, sectionIndex in
+            dataSource[sectionIndex].header
+        })
+        
+        // weatherList를 WeatherSectionModel 배열로 변환
         viewModel.weatherList
-            .map { $0.sorted(by: { $0.key < $1.key }) } // dict 정렬
-            .bind(to: weatherTableView.rx.items(
-                cellIdentifier: "WeatherTableViewCell",
-                cellType: WeatherTableViewCell.self)
-            ) { _, element, cell in
-                let (key, value) = element
-                cell.backgroundColor = .clear
-                cell.updateCell(key: key, value: value)
-                
+            .map { dict in
+                let items = dict.map { WeatherItemModel(date: $0.key, weatherItems: $0.value) }
+                return [WeatherSectionModel(header: "일기예보", items: items)]
             }
+            .bind(to: viewModel.weatherSections)
+            .disposed(by: disposeBag)
+        
+        // weatherSections, weatherTableView에 바인딩
+        viewModel.weatherSections
+            .bind(to: weatherTableView.rx.items(dataSource: dataSource))
             .disposed(by: disposeBag)
         
         // 선택된 cell 처리
         weatherTableView.rx.itemSelected
             .subscribe(onNext: { [weak self] indexPath in
                 guard let self = self else { return }
-                self.weatherTableView.deselectRow(at: indexPath, animated: true)
+                self.weatherTableView.deselectRow(at: indexPath, animated: false)
                 viewModel.getSelctedItemIndex(index: indexPath.row)
                 
             })
             .disposed(by: disposeBag)
         
+//        viewModel.weatherList
+//            .map { $0.sorted(by: { $0.key < $1.key }) } // dict 정렬
+//            .bind(to: weatherTableView.rx.items(
+//                cellIdentifier: "WeatherTableViewCell",
+//                cellType: WeatherTableViewCell.self)
+//            ) { _, element, cell in
+//                let (key, value) = element
+//                cell.backgroundColor = .clear
+//                cell.updateCell(key: key, value: value)
+//
+//            }
+//            .disposed(by: disposeBag)
+        
             
     }
-    
 }

@@ -8,9 +8,28 @@
 import Foundation
 import UIKit
 import RxSwift
+import RxDataSources
 import Alamofire
 import RxRelay
 
+struct WeatherItemModel {
+    let date: String
+    let weatherItems: [ForecastWeatherModel.WeatherItem]
+}
+
+struct WeatherSectionModel {
+    let header: String
+    var items: [WeatherItemModel]
+}
+
+extension WeatherSectionModel: SectionModelType {
+    typealias Item = WeatherItemModel
+    
+    init(original: WeatherSectionModel, items: [Item]) {
+        self = original
+        self.items = items
+    }
+}
 
 class MainViewModel {
     private let disposeBag = DisposeBag()
@@ -18,6 +37,8 @@ class MainViewModel {
     let errorMessage = PublishSubject<String>()
     let weatherData = BehaviorRelay<WeatherModel?>(value: nil)
     var weatherList = BehaviorRelay<[String : [ForecastWeatherModel.WeatherItem]]>(value: [:])
+    let weatherSections = BehaviorRelay<[WeatherSectionModel]>(value: [])
+
 
     // 현재 날씨 데이터 불러오기
     func getWeatherData(latitude: Double, longitude: Double) {
