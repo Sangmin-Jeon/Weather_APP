@@ -266,7 +266,8 @@ extension MainViewController {
         viewModel.weatherList
             .map { dict in
                 let items = dict.map { WeatherItemModel(date: $0.key, weatherItems: $0.value) }
-                return [WeatherSectionModel(header: "일기예보", items: items)]
+                let sorted = items.sorted(by: { $0.date < $1.date })
+                return [WeatherSectionModel(header: "일기예보", items: sorted)]
             }
             .bind(to: viewModel.weatherSections)
             .disposed(by: disposeBag)
