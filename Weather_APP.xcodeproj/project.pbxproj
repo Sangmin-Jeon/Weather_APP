@@ -29,6 +29,8 @@
 		5C4F70E52A1025F40057C4F0 /* Double_Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C4F70E42A1025F40057C4F0 /* Double_Extension.swift */; };
 		5C5B56162A140DEF007FAFD7 /* backgroundLottie.json in Resources */ = {isa = PBXBuildFile; fileRef = 5C5B56152A140DEF007FAFD7 /* backgroundLottie.json */; };
 		5C695FD32A0CB01F00A49688 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C695FD22A0CB01F00A49688 /* APIManager.swift */; };
+		5C75E7542A17BC38007F71F6 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C75E7532A17BC38007F71F6 /* DetailViewController.swift */; };
+		5C75E7562A17BCCB007F71F6 /* DetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C75E7552A17BCCB007F71F6 /* DetailViewModel.swift */; };
 		5CF27C042A11CACF00BA1259 /* String_Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CF27C032A11CACF00BA1259 /* String_Extension.swift */; };
 		5CF394EC2A11B9DB0035AC6E /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CF394EB2A11B9DB0035AC6E /* Constant.swift */; };
 		C6E31C6CCF56E07576B3E043 /* Pods_Weather_APPTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96287B1DB4EADD5942EC390F /* Pods_Weather_APPTests.framework */; };
@@ -81,6 +83,8 @@
 		5C4F70E42A1025F40057C4F0 /* Double_Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double_Extension.swift; sourceTree = "<group>"; };
 		5C5B56152A140DEF007FAFD7 /* backgroundLottie.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = backgroundLottie.json; sourceTree = "<group>"; };
 		5C695FD22A0CB01F00A49688 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
+		5C75E7532A17BC38007F71F6 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		5C75E7552A17BCCB007F71F6 /* DetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewModel.swift; sourceTree = "<group>"; };
 		5CF27C032A11CACF00BA1259 /* String_Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String_Extension.swift; sourceTree = "<group>"; };
 		5CF394EB2A11B9DB0035AC6E /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		5E705FFB4FD6E7B8EEB6B3B1 /* Pods_Weather_APP_Weather_APPUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Weather_APP_Weather_APPUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -209,6 +213,7 @@
 			children = (
 				5C4F70E12A0FAF160057C4F0 /* Cell */,
 				5C2A717A2A0BE770002D90F0 /* MainViewController.swift */,
+				5C75E7532A17BC38007F71F6 /* DetailViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -217,6 +222,7 @@
 			isa = PBXGroup;
 			children = (
 				5C2A717C2A0BE77D002D90F0 /* MainViewModel.swift */,
+				5C75E7552A17BCCB007F71F6 /* DetailViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -517,6 +523,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5C75E7562A17BCCB007F71F6 /* DetailViewModel.swift in Sources */,
 				5C4F70E32A0FAF400057C4F0 /* WeatherTableViewCell.swift in Sources */,
 				5C2A717D2A0BE77D002D90F0 /* MainViewModel.swift in Sources */,
 				5C4F70E52A1025F40057C4F0 /* Double_Extension.swift in Sources */,
@@ -524,6 +531,7 @@
 				5CF27C042A11CACF00BA1259 /* String_Extension.swift in Sources */,
 				5C1700082A0BC55800B943C5 /* ViewController.swift in Sources */,
 				5C695FD32A0CB01F00A49688 /* APIManager.swift in Sources */,
+				5C75E7542A17BC38007F71F6 /* DetailViewController.swift in Sources */,
 				5C2A71772A0BCA4D002D90F0 /* NetworkManager.swift in Sources */,
 				5CF394EC2A11B9DB0035AC6E /* Constant.swift in Sources */,
 				5C4F70DD2A0F1FB90057C4F0 /* ForecastWeatherModel.swift in Sources */,

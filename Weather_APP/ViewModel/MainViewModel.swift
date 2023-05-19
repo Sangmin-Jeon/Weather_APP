@@ -72,9 +72,10 @@ class MainViewModel {
     }
     
     // 선택된 Cell의 항목 처리
-    func getSelctedItemIndex(index: Int) {
+    func getSelctedItemIndex(index: Int, completion: ([String : [ForecastWeatherModel.WeatherItem]]) -> ()) {
         let sorted = self.weatherList.value.sorted(by: { $0.key < $1.key })
-        let _ = sorted[index]
+        let (day, dayNTime) = sorted[index]
+        completion([day : dayNTime])
         
     }
     

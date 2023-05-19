@@ -20,7 +20,6 @@ class MainViewController: ViewController {
     }()
     private let cardView: UIView = {
         let cardView = UIView()
-        cardView.backgroundColor = .blue.withAlphaComponent(0.8)
         cardView.layer.cornerRadius = CGFloat(15)
         cardView.layer.shadowColor = UIColor.black.cgColor
         cardView.layer.shadowOffset = CGSize(width: 0, height: 2)
@@ -213,8 +212,8 @@ class MainViewController: ViewController {
                     
                     self.currentRegion.text = data.name
                     self.temperatureLabel.text = "온도 \(data.main.temp.kelvinToCelsius())°C"
-                    self.pressureLabel.text = "습도 \(data.main.pressure) hPa"
-                    self.humidityLabel.text = "기압 \(data.main.humidity)%"
+                    self.pressureLabel.text = "기압 \(data.main.pressure) hPa"
+                    self.humidityLabel.text = "습도 \(data.main.humidity)%"
                     self.descriptionLabel.text = "현재 날씨 \(String(first.description))입니다."
                 }
             })
@@ -282,7 +281,13 @@ extension MainViewController {
             .subscribe(onNext: { [weak self] indexPath in
                 guard let self = self else { return }
                 self.weatherTableView.deselectRow(at: indexPath, animated: false)
-                viewModel.getSelctedItemIndex(index: indexPath.row)
+                
+                viewModel.getSelctedItemIndex(index: indexPath.row) { [weak self] item in
+                    let detailViewController = DetailViewController()
+                    detailViewController.weatherData = item
+                    self?.present(detailViewController, animated: true, completion: nil)
+                    
+                }
                 
             })
             .disposed(by: disposeBag)
