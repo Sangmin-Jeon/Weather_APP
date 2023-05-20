@@ -90,9 +90,16 @@ class MainViewController: ViewController {
         weatherTableView.isScrollEnabled = true
         weatherTableView.showsVerticalScrollIndicator = false
         weatherTableView.bounces = false
+        weatherTableView.backgroundColor = .clear
         return weatherTableView
     }()
-    private let animationView: LottieAnimationView = {
+    private let animationView_1: LottieAnimationView = {
+        // Lottie파일 다운받아 사용
+        let animationView = LottieAnimationView(name: "FullBackgroundLottie")
+        animationView.contentMode = .scaleAspectFill
+        return animationView
+    }()
+    private let animationView_2: LottieAnimationView = {
         // Lottie파일 다운받아 사용
         let animationView = LottieAnimationView(name: "backgroundLottie")
         animationView.layer.cornerRadius = CGFloat(15)
@@ -114,8 +121,10 @@ class MainViewController: ViewController {
         self.bindData()
         self.bindTableView()
         
-        self.animationView.play()
-        self.animationView.loopMode = .loop
+        self.animationView_1.play()
+        self.animationView_1.loopMode = .loop
+        self.animationView_2.play()
+        self.animationView_2.loopMode = .loop
         
         // 위도, 경도 임시
         viewModel.getWeatherData(latitude: 37.5665, longitude: 126.9780)
@@ -126,15 +135,17 @@ class MainViewController: ViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-        self.animationView.stop()
+        self.animationView_1.stop()
+        self.animationView_2.stop()
     }
 
     
     private func setupLayout() {
-        view.addSubview(weatherTableView)
+        view.addSubview(animationView_1)
+        animationView_1.addSubview(weatherTableView)
         weatherTableView.addSubview(headerView)
         headerView.addSubview(cardView)
-        cardView.addSubview(animationView)
+        cardView.addSubview(animationView_2)
         cardView.addSubview(weatherIconImageView)
         cardView.addSubview(currentRegion)
         cardView.addSubview(temperatureLabel)
@@ -142,6 +153,10 @@ class MainViewController: ViewController {
         cardView.addSubview(humidityLabel)
         cardView.addSubview(descriptionLabel)
 
+        animationView_1.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
         weatherTableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
@@ -159,19 +174,19 @@ class MainViewController: ViewController {
             make.centerX.equalToSuperview()
         }
         
-        animationView.snp.makeConstraints { make in
+        animationView_2.snp.makeConstraints { make in
             make.height.equalTo(300)
             make.width.equalToSuperview()
         }
         
         currentRegion.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(20)
-            make.leading.equalToSuperview().offset(leftOffset)
+            make.trailing.equalToSuperview().offset(rightOffset)
         }
         
         weatherIconImageView.snp.makeConstraints { make in
             make.top.equalTo(currentRegion.snp.bottom).offset(8)
-            make.centerX.equalToSuperview()
+            make.trailing.equalToSuperview().offset(rightOffset)
             make.width.height.equalTo(100)
         }
         
@@ -256,6 +271,7 @@ extension MainViewController {
         let dataSource = RxTableViewSectionedReloadDataSource<WeatherSectionModel>(configureCell: { (_, tableView, indexPath, element) in
             let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherTableViewCell") as! WeatherTableViewCell
             cell.updateCell(key: element.date, value: element.weatherItems)
+            cell.backgroundColor = .clear
             return cell
         }, titleForHeaderInSection: { dataSource, sectionIndex in
             dataSource[sectionIndex].header

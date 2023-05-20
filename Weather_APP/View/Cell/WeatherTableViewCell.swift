@@ -13,7 +13,7 @@ import SnapKit
 class WeatherTableViewCell: UITableViewCell {
     let cellBackgroundView: UIView = {
         let cellBackgroundView = UIView()
-        cellBackgroundView.backgroundColor = .black.withAlphaComponent(0.2)
+        cellBackgroundView.backgroundColor = .black.withAlphaComponent(0.1)
         cellBackgroundView.layer.cornerRadius = CGFloat(15)
         return cellBackgroundView
     }()
