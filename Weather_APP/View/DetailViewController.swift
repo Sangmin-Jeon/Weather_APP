@@ -24,6 +24,18 @@ class DetailViewController: ViewController {
         titleView.textColor = .black
         return titleView
     }()
+    
+    let chartBackgroundView: UIView = {
+        let chartBackgroundView = UIView()
+        chartBackgroundView.backgroundColor = .black.withAlphaComponent(0.3)
+        chartBackgroundView.layer.cornerRadius = CGFloat(15)
+        chartBackgroundView.layer.shadowColor = UIColor.black.cgColor
+        chartBackgroundView.layer.shadowOffset = CGSize(width: 0, height: 2)
+        chartBackgroundView.layer.shadowOpacity = 0.5
+        chartBackgroundView.layer.shadowRadius = 4
+        return chartBackgroundView
+    }()
+    
     let chartView: LineChartView = {
         let chartView = LineChartView()
         chartView.noDataFont = .systemFont(ofSize: 10)
@@ -31,14 +43,17 @@ class DetailViewController: ViewController {
         chartView.chartDescription.text = "최고/최저기온이 같을 경우 파랑색으로 표시"
         
         chartView.noDataTextColor = .darkGray
-        chartView.backgroundColor = .white
+        chartView.backgroundColor = .clear
         
         chartView.doubleTapToZoomEnabled = false
         chartView.highlightPerTapEnabled = true
         chartView.rightAxis.enabled = false
         chartView.leftAxis.enabled = true
+        chartView.extraRightOffset = 50
         
         chartView.xAxis.labelPosition = .bottom
+        chartView.xAxis.drawGridLinesEnabled = false
+        chartView.leftAxis.drawGridLinesEnabled = false
         chartView.animate(yAxisDuration: 0.75, easingOption: .easeInBounce)
         
         let marker = CustomMarkerView()
@@ -60,7 +75,8 @@ class DetailViewController: ViewController {
     private func setupLayout() {
         view.addSubview(contentView)
         contentView.addSubview(titleView)
-        contentView.addSubview(chartView)
+        contentView.addSubview(chartBackgroundView)
+        chartBackgroundView.addSubview(chartView)
         
         contentView.snp.updateConstraints { make in
             make.edges.equalToSuperview()
@@ -72,11 +88,18 @@ class DetailViewController: ViewController {
             make.top.equalToSuperview().offset(10)
         }
         
-        chartView.snp.makeConstraints { make in
+        chartBackgroundView.snp.makeConstraints { make in
             make.top.equalTo(titleView.snp.bottom).offset(20)
-            make.height.equalTo(200)
+            make.height.equalTo(250)
             make.leading.equalToSuperview().offset(leftOffset)
             make.trailing.equalToSuperview().offset(rightOffset)
+        }
+        
+        chartView.snp.makeConstraints { make in
+            make.centerY.equalTo(chartBackgroundView)
+            make.height.equalTo(220)
+            make.leading.equalToSuperview().offset(leftOffset)
+            make.trailing.equalToSuperview().offset(rightOffset + 20)
         }
         
     }
