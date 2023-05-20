@@ -34,12 +34,16 @@ class DetailViewController: ViewController {
         chartView.backgroundColor = .white
         
         chartView.doubleTapToZoomEnabled = false
-        chartView.highlightPerTapEnabled = false
+        chartView.highlightPerTapEnabled = true
         chartView.rightAxis.enabled = false
-        chartView.leftAxis.enabled = false
+        chartView.leftAxis.enabled = true
         
         chartView.xAxis.labelPosition = .bottom
         chartView.animate(yAxisDuration: 0.75, easingOption: .easeInBounce)
+        
+        let marker = CustomMarkerView()
+        chartView.marker = marker
+        
         return chartView
     }()
     
@@ -101,10 +105,16 @@ class DetailViewController: ViewController {
                 
                 let highSet = LineChartDataSet(entries: highEntries, label: "최고기온")
                 highSet.setColor(.red)
+                highSet.setCircleColor(.red)
+                highSet.circleRadius = 5.0
+                highSet.drawCirclesEnabled = true
                 highSet.mode = .cubicBezier
                 
                 let lowSet = LineChartDataSet(entries: lowEntries, label: "최저기온")
                 lowSet.setColor(.blue)
+                lowSet.setCircleColor(.blue)
+                lowSet.circleRadius = 5.0
+                lowSet.drawCirclesEnabled = true
                 lowSet.mode = .cubicBezier
                 
                 self.chartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: self.xAxisList)
