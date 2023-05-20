@@ -37,4 +37,19 @@ extension String {
             return ""
         }
     }
+    
+    func convertHour() -> String {
+        let dateFormatterGet = DateFormatter()
+        dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        
+        let dateFormatterPrint = DateFormatter()
+        dateFormatterPrint.dateFormat = "HH시"
+        
+        if let date = dateFormatterGet.date(from: self) {
+            return dateFormatterPrint.string(from: date)
+        }
+        else {
+            return ""
+        }
+    }
 }

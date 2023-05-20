@@ -13,6 +13,7 @@ target 'Weather_APP' do
   pod 'Kingfisher', '7.6.1'
 
   pod 'lottie-ios'
+  pod 'Charts'
 
   # Pods for Weather_APP
 
