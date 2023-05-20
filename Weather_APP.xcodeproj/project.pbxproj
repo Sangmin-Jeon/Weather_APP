@@ -33,6 +33,10 @@
 		5C75E7592A18FFFC007F71F6 /* CustomMarkerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C75E7582A18FFFC007F71F6 /* CustomMarkerView.swift */; };
 		5C75E75D2A1911C0007F71F6 /* FullBackgroundLottie.json in Resources */ = {isa = PBXBuildFile; fileRef = 5C75E75C2A1911C0007F71F6 /* FullBackgroundLottie.json */; };
 		5C75E75F2A1912A8007F71F6 /* backgroundLottie.json in Resources */ = {isa = PBXBuildFile; fileRef = 5C75E75E2A1912A8007F71F6 /* backgroundLottie.json */; };
+		5C75E77E2A191FAA007F71F6 /* Happiness-Sans-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5C75E77B2A191FAA007F71F6 /* Happiness-Sans-Regular.otf */; };
+		5C75E77F2A191FAA007F71F6 /* Happiness-Sans-Title.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5C75E77C2A191FAA007F71F6 /* Happiness-Sans-Title.otf */; };
+		5C75E7802A191FAA007F71F6 /* Happiness-Sans-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5C75E77D2A191FAA007F71F6 /* Happiness-Sans-Bold.otf */; };
+		5C75E7822A192184007F71F6 /* UIFont_Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C75E7812A192184007F71F6 /* UIFont_Extension.swift */; };
 		5CF27C042A11CACF00BA1259 /* String_Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CF27C032A11CACF00BA1259 /* String_Extension.swift */; };
 		5CF394EC2A11B9DB0035AC6E /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CF394EB2A11B9DB0035AC6E /* Constant.swift */; };
 		C6E31C6CCF56E07576B3E043 /* Pods_Weather_APPTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96287B1DB4EADD5942EC390F /* Pods_Weather_APPTests.framework */; };
@@ -89,6 +93,10 @@
 		5C75E7582A18FFFC007F71F6 /* CustomMarkerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMarkerView.swift; sourceTree = "<group>"; };
 		5C75E75C2A1911C0007F71F6 /* FullBackgroundLottie.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = FullBackgroundLottie.json; sourceTree = "<group>"; };
 		5C75E75E2A1912A8007F71F6 /* backgroundLottie.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = backgroundLottie.json; sourceTree = "<group>"; };
+		5C75E77B2A191FAA007F71F6 /* Happiness-Sans-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Happiness-Sans-Regular.otf"; sourceTree = "<group>"; };
+		5C75E77C2A191FAA007F71F6 /* Happiness-Sans-Title.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Happiness-Sans-Title.otf"; sourceTree = "<group>"; };
+		5C75E77D2A191FAA007F71F6 /* Happiness-Sans-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Happiness-Sans-Bold.otf"; sourceTree = "<group>"; };
+		5C75E7812A192184007F71F6 /* UIFont_Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFont_Extension.swift; sourceTree = "<group>"; };
 		5CF27C032A11CACF00BA1259 /* String_Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String_Extension.swift; sourceTree = "<group>"; };
 		5CF394EB2A11B9DB0035AC6E /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		5E705FFB4FD6E7B8EEB6B3B1 /* Pods_Weather_APP_Weather_APPUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Weather_APP_Weather_APPUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -156,6 +164,7 @@
 			children = (
 				5C75E75C2A1911C0007F71F6 /* FullBackgroundLottie.json */,
 				5C75E75E2A1912A8007F71F6 /* backgroundLottie.json */,
+				5C75E76E2A191E1A007F71F6 /* Fonts */,
 				5C4F70DE2A0F88820057C4F0 /* Common */,
 				5C2A717E2A0BEFF7002D90F0 /* Model */,
 				5C2A71752A0BCA3A002D90F0 /* Net */,
@@ -248,6 +257,7 @@
 				5CF394EB2A11B9DB0035AC6E /* Constant.swift */,
 				5C4F70E42A1025F40057C4F0 /* Double_Extension.swift */,
 				5CF27C032A11CACF00BA1259 /* String_Extension.swift */,
+				5C75E7812A192184007F71F6 /* UIFont_Extension.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -267,6 +277,16 @@
 				5C75E7582A18FFFC007F71F6 /* CustomMarkerView.swift */,
 			);
 			path = Common;
+			sourceTree = "<group>";
+		};
+		5C75E76E2A191E1A007F71F6 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				5C75E77D2A191FAA007F71F6 /* Happiness-Sans-Bold.otf */,
+				5C75E77B2A191FAA007F71F6 /* Happiness-Sans-Regular.otf */,
+				5C75E77C2A191FAA007F71F6 /* Happiness-Sans-Title.otf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 		5E9E2B1CB961C08ACB74CE84 /* Frameworks */ = {
@@ -403,10 +423,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				5C75E75F2A1912A8007F71F6 /* backgroundLottie.json in Resources */,
+				5C75E7802A191FAA007F71F6 /* Happiness-Sans-Bold.otf in Resources */,
 				5C378DC42A0CA4D900CE3431 /* .gitignore in Resources */,
 				5C1700132A0BC55900B943C5 /* LaunchScreen.storyboard in Resources */,
+				5C75E77F2A191FAA007F71F6 /* Happiness-Sans-Title.otf in Resources */,
 				5C75E75D2A1911C0007F71F6 /* FullBackgroundLottie.json in Resources */,
 				5C1700102A0BC55900B943C5 /* Assets.xcassets in Resources */,
+				5C75E77E2A191FAA007F71F6 /* Happiness-Sans-Regular.otf in Resources */,
 				5C17000B2A0BC55800B943C5 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -548,6 +571,7 @@
 				5C695FD32A0CB01F00A49688 /* APIManager.swift in Sources */,
 				5C75E7542A17BC38007F71F6 /* DetailViewController.swift in Sources */,
 				5C2A71772A0BCA4D002D90F0 /* NetworkManager.swift in Sources */,
+				5C75E7822A192184007F71F6 /* UIFont_Extension.swift in Sources */,
 				5CF394EC2A11B9DB0035AC6E /* Constant.swift in Sources */,
 				5C75E7592A18FFFC007F71F6 /* CustomMarkerView.swift in Sources */,
 				5C4F70DD2A0F1FB90057C4F0 /* ForecastWeatherModel.swift in Sources */,

@@ -30,7 +30,7 @@ class MainViewController: ViewController {
     }()
     private let currentRegion: UILabel = { // 지역이름
         let currentRegion = UILabel()
-        currentRegion.font = UIFont.systemFont(ofSize: 40, weight: .bold)
+        currentRegion.font = UIFont().happiness(size: 40, type: .bold)
         currentRegion.textColor = .white
         currentRegion.layer.shadowColor = UIColor.black.cgColor
         currentRegion.layer.shadowOffset = CGSize(width: 0, height: 1)
@@ -40,6 +40,7 @@ class MainViewController: ViewController {
     }()
     private let temperatureLabel: UILabel = { // 기온
         let temperatureLabel = UILabel()
+        temperatureLabel.font = UIFont().happiness(size: 15, type: .regular)
         temperatureLabel.textColor = .white
         temperatureLabel.layer.shadowColor = UIColor.black.cgColor
         temperatureLabel.layer.shadowOffset = CGSize(width: 0, height: 1)
@@ -50,6 +51,7 @@ class MainViewController: ViewController {
     private let pressureLabel: UILabel = { // 기압
         let pressureLabel = UILabel()
         pressureLabel.textColor = .white
+        pressureLabel.font = UIFont().happiness(size: 15, type: .regular)
         pressureLabel.layer.shadowColor = UIColor.black.cgColor
         pressureLabel.layer.shadowOffset = CGSize(width: 0, height: 1)
         pressureLabel.layer.shadowOpacity = 0.5
@@ -59,6 +61,7 @@ class MainViewController: ViewController {
     private let humidityLabel: UILabel = { // 습도
         let humidityLabel = UILabel()
         humidityLabel.textColor = .white
+        humidityLabel.font = UIFont().happiness(size: 15, type: .regular)
         humidityLabel.layer.shadowColor = UIColor.black.cgColor
         humidityLabel.layer.shadowOffset = CGSize(width: 0, height: 1)
         humidityLabel.layer.shadowOpacity = 0.5
@@ -68,6 +71,7 @@ class MainViewController: ViewController {
     private let descriptionLabel: UILabel = { // 날씨 정보
         let descriptionLabel = UILabel()
         descriptionLabel.textColor = .white
+        descriptionLabel.font = UIFont().happiness(size: 15, type: .regular)
         descriptionLabel.layer.shadowColor = UIColor.black.cgColor
         descriptionLabel.layer.shadowOffset = CGSize(width: 0, height: 1)
         descriptionLabel.layer.shadowOpacity = 0.5

@@ -18,16 +18,21 @@ class DetailViewController: ViewController {
     var weatherData = [String : [ForecastWeatherModel.WeatherItem]]()
     var xAxisList = [String]()
     
+    let titleBackgroundView: UIView = {
+        let titleBackgroundView = UIView()
+        return titleBackgroundView
+    }()
+    
     let titleView: UILabel = {
         let titleView = UILabel()
-        titleView.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        titleView.font = UIFont().happiness(size: 20, type: .bold)
         titleView.textColor = .black
         return titleView
     }()
     
     let chartBackgroundView: UIView = {
         let chartBackgroundView = UIView()
-        chartBackgroundView.backgroundColor = .black.withAlphaComponent(0.3)
+        chartBackgroundView.backgroundColor = .white
         chartBackgroundView.layer.cornerRadius = CGFloat(15)
         chartBackgroundView.layer.shadowColor = UIColor.black.cgColor
         chartBackgroundView.layer.shadowOffset = CGSize(width: 0, height: 2)

@@ -19,6 +19,7 @@ class WeatherTableViewCell: UITableViewCell {
     }()
     let titleLabel: UILabel = {
         let titleLabel = UILabel()
+        titleLabel.font = UIFont().happiness(size: 16, type: .bold)
         return titleLabel
     }()
     
