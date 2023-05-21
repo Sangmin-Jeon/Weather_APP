@@ -112,10 +112,17 @@ class MainViewController: ViewController {
     }()
     
     private let viewModel = MainViewModel()
-    private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        #if targetEnvironment(simulator)
+        // 시뮬레이터일 경우 서울로 고정
+        viewModel.getWeatherData(latitude: 37.5665, longitude: 126.9780)
+        viewModel.getHourlyWeatherData(latitude: 37.5665, longitude: 126.9780)
+        #else
+        self.getLocation()
+        #endif
         
         weatherTableView.register(WeatherTableViewCell.self, forCellReuseIdentifier: "WeatherTableViewCell")
         weatherTableView.backgroundColor = .white.withAlphaComponent(0.5)
@@ -130,9 +137,6 @@ class MainViewController: ViewController {
         self.animationView_2.play()
         self.animationView_2.loopMode = .loop
         
-        // 위도, 경도 임시
-        viewModel.getWeatherData(latitude: 37.5665, longitude: 126.9780)
-        viewModel.getHourlyWeatherData(latitude: 37.5665, longitude: 126.9780)
         
     }
     
@@ -264,6 +268,25 @@ class MainViewController: ViewController {
             })
             .disposed(by: disposeBag)
     
+    }
+    
+    // GPS정보 받아 오기
+    func getLocation() {
+        curLocation.subscribe(
+            onNext: { [weak self] location in
+                guard let self = self else { return }
+                // 위도, 경도
+                if let lat = location[.lat], let lon = location[.lon] {
+                    self.viewModel.getWeatherData(latitude: lat, longitude: lon)
+                    self.viewModel.getHourlyWeatherData(latitude: lat, longitude: lon)
+                }
+            },
+            onError: { [weak self] error in
+                guard let self = self else { return }
+                self.errorMessage.onNext(error.localizedDescription)
+            }
+        )
+        .disposed(by: disposeBag)
     }
     
 }

@@ -13,7 +13,6 @@ import Charts
 
 class DetailViewController: ViewController {
     private let viewModel = DetailViewModel()
-    private let disposeBag = DisposeBag()
     
     var weatherData = [String : [ForecastWeatherModel.WeatherItem]]()
     var xAxisList = [String]()
