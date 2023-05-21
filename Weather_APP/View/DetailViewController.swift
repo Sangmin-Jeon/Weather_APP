@@ -136,6 +136,7 @@ class DetailViewController: ViewController {
     
     // chart데이터 및 UI 세팅
     private func setChart(values: [TemperatureData]) -> LineChartDataSet {
+        // Chart에 표시할 데이터
         let highEntries = values.enumerated().map { (index, temp) -> ChartDataEntry in
             if let getTemp = Double(temp.temp) {
                 self.xAxisList.append(temp.dt.convertHour())
@@ -145,14 +146,21 @@ class DetailViewController: ViewController {
            
         }
         
-        let tempSet = LineChartDataSet(entries: highEntries, label: "최고기온")
-        tempSet.setColor(.red)
-        tempSet.setCircleColor(.red)
+        // Chart UI 정보 세팅
+        let tempSet = LineChartDataSet(entries: highEntries, label: "기온정보")
+        tempSet.setColor(.blue.withAlphaComponent(0.2))
+        tempSet.setCircleColor(.gray)
         tempSet.circleRadius = 5.0
         tempSet.drawCirclesEnabled = true
         tempSet.mode = .cubicBezier
+        tempSet.drawFilledEnabled = true
+        if let gradient = [UIColor.blue, UIColor.white].setGradient() {
+            let fill = LinearGradientFill(gradient: gradient, angle: 90.0)
+            tempSet.fill = fill
+        }
+
         
-        // chart X축 정보 표시
+        // chart (X, Y)축 정보 표시 세팅
         self.chartView.xAxis.granularity = 1
         self.chartView.xAxis.labelCount = self.xAxisList.count
         self.chartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: self.xAxisList)
