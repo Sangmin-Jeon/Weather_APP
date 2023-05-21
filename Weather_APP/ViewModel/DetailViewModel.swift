@@ -11,8 +11,7 @@ import Charts
 
 struct TemperatureData {
     let dt: String
-    let max: String
-    let min: String
+    let temp: String
 }
 
 class DetailViewModel {
@@ -26,8 +25,7 @@ class DetailViewModel {
             dateNTime.forEach { item in
                 let temp = TemperatureData(
                     dt: item.dt_txt,
-                    max: item.main.temp_max.kelvinToCelsius(),
-                    min: item.main.temp_min.kelvinToCelsius()
+                    temp: item.main.temp.kelvinToCelsius()
                 )
                 setChartsData.append(temp)
             }

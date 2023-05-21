@@ -20,6 +20,12 @@ class DetailViewController: ViewController {
     
     let titleBackgroundView: UIView = {
         let titleBackgroundView = UIView()
+        titleBackgroundView.backgroundColor = .white
+        titleBackgroundView.layer.cornerRadius = CGFloat(15)
+        titleBackgroundView.layer.shadowColor = UIColor.black.cgColor
+        titleBackgroundView.layer.shadowOffset = CGSize(width: 0, height: 2)
+        titleBackgroundView.layer.shadowOpacity = 0.5
+        titleBackgroundView.layer.shadowRadius = 4
         return titleBackgroundView
     }()
     
@@ -79,7 +85,8 @@ class DetailViewController: ViewController {
     
     private func setupLayout() {
         view.addSubview(contentView)
-        contentView.addSubview(titleView)
+        contentView.addSubview(titleBackgroundView)
+        titleBackgroundView.addSubview(titleView)
         contentView.addSubview(chartBackgroundView)
         chartBackgroundView.addSubview(chartView)
         
@@ -87,14 +94,21 @@ class DetailViewController: ViewController {
             make.edges.equalToSuperview()
         }
         
+        titleBackgroundView.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(30)
+            make.leading.equalToSuperview().offset(leftOffset)
+            make.trailing.equalToSuperview().offset(rightOffset)
+            make.height.equalTo(50)
+        }
+        
         titleView.text = weatherData.first?.key.convertMonthNDay()
         titleView.snp.makeConstraints { make in
+            make.centerY.equalTo(titleBackgroundView)
             make.leading.equalToSuperview().offset(10)
-            make.top.equalToSuperview().offset(10)
         }
         
         chartBackgroundView.snp.makeConstraints { make in
-            make.top.equalTo(titleView.snp.bottom).offset(20)
+            make.top.equalTo(titleBackgroundView.snp.bottom).offset(20)
             make.height.equalTo(250)
             make.leading.equalToSuperview().offset(leftOffset)
             make.trailing.equalToSuperview().offset(rightOffset)
@@ -112,46 +126,38 @@ class DetailViewController: ViewController {
     private func bindData() {
         viewModel.chartData
             .map { (values) -> LineChartData in
-                let highEntries = values.enumerated().map { (index, temp) -> ChartDataEntry in
-                    if let getTemp = Double(temp.max) {
-                        self.xAxisList.append(temp.dt.convertHour())
-                        return ChartDataEntry(x: Double(index), y: getTemp)
-                    }
-                    return ChartDataEntry()
-                   
-                }
-                
-                let lowEntries = values.enumerated().map { (index, temp) -> ChartDataEntry in
-                    if let getTemp = Double(temp.min) {
-                        if self.xAxisList.isEmpty {
-                            self.xAxisList.append(temp.dt.convertHour())
-                        }
-                        return ChartDataEntry(x: Double(index), y: getTemp)
-                    }
-                    return ChartDataEntry()
-                }
-                
-                let highSet = LineChartDataSet(entries: highEntries, label: "최고기온")
-                highSet.setColor(.red)
-                highSet.setCircleColor(.red)
-                highSet.circleRadius = 5.0
-                highSet.drawCirclesEnabled = true
-                highSet.mode = .cubicBezier
-                
-                let lowSet = LineChartDataSet(entries: lowEntries, label: "최저기온")
-                lowSet.setColor(.blue)
-                lowSet.setCircleColor(.blue)
-                lowSet.circleRadius = 5.0
-                lowSet.drawCirclesEnabled = true
-                lowSet.mode = .cubicBezier
-                
-                self.chartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: self.xAxisList)
-                
-                return LineChartData(dataSets: [highSet, lowSet])
+                let temp = self.setChart(values: values)
+                return LineChartData(dataSets: [temp])
             }
             .bind(to: chartView.rx.data)
             .disposed(by: disposeBag)
+            
+    }
+    
+    // chart데이터 및 UI 세팅
+    private func setChart(values: [TemperatureData]) -> LineChartDataSet {
+        let highEntries = values.enumerated().map { (index, temp) -> ChartDataEntry in
+            if let getTemp = Double(temp.temp) {
+                self.xAxisList.append(temp.dt.convertHour())
+                return ChartDataEntry(x: Double(index), y: getTemp)
+            }
+            return ChartDataEntry()
+           
+        }
         
+        let tempSet = LineChartDataSet(entries: highEntries, label: "최고기온")
+        tempSet.setColor(.red)
+        tempSet.setCircleColor(.red)
+        tempSet.circleRadius = 5.0
+        tempSet.drawCirclesEnabled = true
+        tempSet.mode = .cubicBezier
+        
+        // chart X축 정보 표시
+        self.chartView.xAxis.granularity = 1
+        self.chartView.xAxis.labelCount = self.xAxisList.count
+        self.chartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: self.xAxisList)
+        
+        return tempSet
     }
 
 }
