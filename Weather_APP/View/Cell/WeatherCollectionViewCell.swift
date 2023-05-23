@@ -13,22 +13,29 @@ import Kingfisher
 class WeatherCollectionViewCell: UICollectionViewCell {
     let background: UIView = {
         let background = UIView()
-        background.layer.cornerRadius = 20
-        background.backgroundColor = .black
+        background.layer.cornerRadius = 25
+        background.backgroundColor = UIColor(named: "SkyBlue")!.withAlphaComponent(0.8)
         return background
     }()
     
     let titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.textColor = .white
-        titleLabel.font = UIFont().happiness(size: 15, type: .regular)
+        titleLabel.font = UIFont().happiness(size: 14, type: .regular)
         return titleLabel
     }()
     
     let weatherImage: UIImageView = {
         let weatherImage = UIImageView()
-    
+        weatherImage.contentMode = .scaleAspectFill
         return weatherImage
+    }()
+    
+    let tempLabel: UILabel = {
+        let tempLabel = UILabel()
+        tempLabel.textColor = .white
+        tempLabel.font = UIFont().happiness(size: 14, type: .regular)
+        return tempLabel
     }()
     
     override init(frame: CGRect) {
@@ -44,23 +51,29 @@ class WeatherCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(background)
         background.addSubview(weatherImage)
         background.addSubview(titleLabel)
+        background.addSubview(tempLabel)
         
         background.snp.makeConstraints { make in
             make.edges.equalToSuperview()
             
         }
         
+        tempLabel.snp.makeConstraints { make in
+            make.top.equalTo(background.snp.top).offset(10)
+            make.centerX.equalToSuperview()
+            
+        }
+        
         weatherImage.snp.makeConstraints { make in
-            make.top.equalTo(background).offset(10)
-            make.height.width.equalTo(50)
+            make.top.equalTo(tempLabel.snp.bottom).offset(0)
+            make.height.width.equalTo(40)
             make.centerX.equalToSuperview()
             
         }
         
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(weatherImage.snp.bottom).offset(3)
+            make.top.equalTo(weatherImage.snp.bottom).offset(0)
             make.centerX.equalToSuperview()
-            
         }
         
     }
@@ -71,6 +84,7 @@ class WeatherCollectionViewCell: UICollectionViewCell {
             weatherImage.kf.setImage(with: url)
         }
         titleLabel.text = item.dt_txt.convertHour()
+        tempLabel.text = "\(item.main.temp.kelvinToCelsius())°C"
         
     }
     

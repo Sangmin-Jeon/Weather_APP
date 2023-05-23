@@ -75,7 +75,7 @@ class DetailViewController: ViewController {
     
     let weatherCollectionBackgroundView: UIView = {
         let weatherTableViewBackground = UIView()
-        weatherTableViewBackground.backgroundColor = .black
+        weatherTableViewBackground.backgroundColor = .clear
         return weatherTableViewBackground
     }()
     
@@ -186,13 +186,13 @@ class DetailViewController: ViewController {
         
         // Chart UI 정보 세팅
         let tempSet = LineChartDataSet(entries: highEntries, label: "기온정보")
-        tempSet.setColor(.blue.withAlphaComponent(0.2))
+        tempSet.setColor(UIColor(named: "SkyBlue")!.withAlphaComponent(1))
         tempSet.setCircleColor(.gray)
         tempSet.circleRadius = 5.0
         tempSet.drawCirclesEnabled = true
         tempSet.mode = .cubicBezier
         tempSet.drawFilledEnabled = true
-        if let gradient = [UIColor.blue, UIColor.white].setGradient() {
+        if let gradient = [UIColor(named: "SkyBlue")!.withAlphaComponent(1), UIColor.white].setGradient() {
             let fill = LinearGradientFill(gradient: gradient, angle: 90.0)
             tempSet.fill = fill
         }
