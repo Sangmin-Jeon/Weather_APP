@@ -7,6 +7,7 @@
 
 import UIKit
 import RxSwift
+import RxDataSources
 import SnapKit
 import Charts
 
@@ -50,7 +51,7 @@ class DetailViewController: ViewController {
         let chartView = LineChartView()
         chartView.noDataFont = .systemFont(ofSize: 10)
         chartView.noDataText = "날씨 데이터가 없습니다."
-        chartView.chartDescription.text = "최고/최저기온이 같을 경우 파랑색으로 표시"
+        chartView.chartDescription.text = "3시간 간격으로 기온을 표시"
         
         chartView.noDataTextColor = .darkGray
         chartView.backgroundColor = .clear
@@ -72,13 +73,36 @@ class DetailViewController: ViewController {
         return chartView
     }()
     
+    let weatherCollectionBackgroundView: UIView = {
+        let weatherTableViewBackground = UIView()
+        weatherTableViewBackground.backgroundColor = .black
+        return weatherTableViewBackground
+    }()
+    
+    let weatherCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.itemSize = CGSize(width: 100, height: 100)
+        let weatherTableView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        weatherTableView.showsHorizontalScrollIndicator = false
+        weatherTableView.bounces = false
+        weatherTableView.backgroundColor = .white
+        return weatherTableView
+    }()
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
        
+        viewModel.weatherData = weatherData
         view.backgroundColor = .white
+        
+        weatherCollectionView.register(WeatherCollectionViewCell.self, forCellWithReuseIdentifier: "WeatherCollectionViewCell")
+        
         viewModel.getchartData(data: weatherData)
         setupLayout()
         bindData()
+        bindCollectionView()
         
     }
     
@@ -88,6 +112,8 @@ class DetailViewController: ViewController {
         titleBackgroundView.addSubview(titleView)
         contentView.addSubview(chartBackgroundView)
         chartBackgroundView.addSubview(chartView)
+        contentView.addSubview(weatherCollectionBackgroundView)
+        weatherCollectionBackgroundView.addSubview(weatherCollectionView)
         
         contentView.snp.updateConstraints { make in
             make.edges.equalToSuperview()
@@ -119,6 +145,19 @@ class DetailViewController: ViewController {
             make.leading.equalToSuperview().offset(leftOffset)
             make.trailing.equalToSuperview().offset(rightOffset + 20)
         }
+        
+        weatherCollectionBackgroundView.snp.makeConstraints { make in
+            make.top.equalTo(chartBackgroundView.snp.bottom).offset(20)
+            make.leading.equalToSuperview().offset(leftOffset)
+            make.trailing.equalToSuperview().offset(rightOffset)
+            make.height.equalTo(100) // Set height as 100
+            
+        }
+        
+        weatherCollectionView.snp.updateConstraints { make in
+            make.edges.equalTo(weatherCollectionBackgroundView)
+        }
+        
         
     }
     
@@ -167,6 +206,30 @@ class DetailViewController: ViewController {
         return tempSet
     }
 
+}
+
+extension DetailViewController {
+    func bindCollectionView() {
+        // weatherData, 컬렉션뷰에 바인딩
+        let dataSource = RxCollectionViewSectionedReloadDataSource<SectionModel<String, ForecastWeatherModel.WeatherItem>>(configureCell: { (_, collectionView, indexPath, element) in
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "WeatherCollectionViewCell", for: indexPath) as! WeatherCollectionViewCell
+            cell.backgroundColor = .clear
+            cell.updateCell(item: element)
+            return cell
+        })
+        
+        // Observable 데이터 소스를 컬렉션 뷰에 바인딩
+        viewModel.weatherDataObservable
+            .bind(to: weatherCollectionView.rx.items(dataSource: dataSource))
+            .disposed(by: disposeBag)
+        
+        // 선택된 셀에 대한 처리
+        weatherCollectionView.rx.itemSelected
+            .subscribe(onNext: { indexPath in
+                print(indexPath)
+            })
+            .disposed(by: disposeBag)
+    }
 }
 
 

@@ -7,6 +7,8 @@
 
 import Foundation
 import RxSwift
+import RxRelay
+import RxDataSources
 import Charts
 
 struct TemperatureData {
@@ -17,6 +19,12 @@ struct TemperatureData {
 class DetailViewModel {
     
     let chartData = BehaviorSubject<[TemperatureData]>(value: [])
+    var weatherData = [String : [ForecastWeatherModel.WeatherItem]]()
+    var weatherDataObservable: Observable<[SectionModel<String, ForecastWeatherModel.WeatherItem>]> {
+        return Observable.just(weatherData.map { (key, value) -> SectionModel<String, ForecastWeatherModel.WeatherItem> in
+            return SectionModel(model: key, items: value)
+        })
+    }
     
     func getchartData(data: [String : [ForecastWeatherModel.WeatherItem]]) {
         var setChartsData = [TemperatureData]()
