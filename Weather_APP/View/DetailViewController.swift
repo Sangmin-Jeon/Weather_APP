@@ -31,7 +31,7 @@ class DetailViewController: ViewController {
     
     let titleView: UILabel = {
         let titleView = UILabel()
-        titleView.font = UIFont().happiness(size: 20, type: .bold)
+        titleView.font = UIFont().happiness(size: 20, type: .title)
         titleView.textColor = .black
         return titleView
     }()
@@ -45,6 +45,14 @@ class DetailViewController: ViewController {
         chartBackgroundView.layer.shadowOpacity = 0.5
         chartBackgroundView.layer.shadowRadius = 4
         return chartBackgroundView
+    }()
+    
+    let chartViewTitle: UILabel = {
+        let chartViewTitle = UILabel()
+        chartViewTitle.font = UIFont().happiness(size: 18, type: .bold)
+        chartViewTitle.textColor = .black
+        chartViewTitle.text = "기온 차트"
+        return chartViewTitle
     }()
     
     let chartView: LineChartView = {
@@ -79,6 +87,14 @@ class DetailViewController: ViewController {
         return weatherTableViewBackground
     }()
     
+    let weatherCollectionViewTitle: UILabel = {
+        let weatherCollectionViewTitle = UILabel()
+        weatherCollectionViewTitle.font = UIFont().happiness(size: 18, type: .bold)
+        weatherCollectionViewTitle.textColor = .black
+        weatherCollectionViewTitle.text = "시간대별 날씨 정보"
+        return weatherCollectionViewTitle
+    }()
+    
     let weatherCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -97,6 +113,7 @@ class DetailViewController: ViewController {
         viewModel.weatherData = weatherData
         view.backgroundColor = .white
         
+        weatherCollectionView.delegate = self
         weatherCollectionView.register(WeatherCollectionViewCell.self, forCellWithReuseIdentifier: "WeatherCollectionViewCell")
         
         viewModel.getchartData(data: weatherData)
@@ -111,8 +128,10 @@ class DetailViewController: ViewController {
         contentView.addSubview(titleBackgroundView)
         titleBackgroundView.addSubview(titleView)
         contentView.addSubview(chartBackgroundView)
+        chartBackgroundView.addSubview(chartViewTitle)
         chartBackgroundView.addSubview(chartView)
         contentView.addSubview(weatherCollectionBackgroundView)
+        weatherCollectionBackgroundView.addSubview(weatherCollectionViewTitle)
         weatherCollectionBackgroundView.addSubview(weatherCollectionView)
         
         contentView.snp.updateConstraints { make in
@@ -134,13 +153,18 @@ class DetailViewController: ViewController {
         
         chartBackgroundView.snp.makeConstraints { make in
             make.top.equalTo(titleBackgroundView.snp.bottom).offset(20)
-            make.height.equalTo(250)
+            make.height.equalTo(280)
             make.leading.equalToSuperview().offset(leftOffset)
             make.trailing.equalToSuperview().offset(rightOffset)
         }
         
+        chartViewTitle.snp.makeConstraints { make in
+            make.top.equalTo(chartBackgroundView).offset(10)
+            make.leading.equalToSuperview().offset(leftOffset)
+        }
+        
         chartView.snp.makeConstraints { make in
-            make.centerY.equalTo(chartBackgroundView)
+            make.top.equalTo(chartViewTitle.snp.bottom).offset(10)
             make.height.equalTo(220)
             make.leading.equalToSuperview().offset(leftOffset)
             make.trailing.equalToSuperview().offset(rightOffset + 20)
@@ -148,16 +172,19 @@ class DetailViewController: ViewController {
         
         weatherCollectionBackgroundView.snp.makeConstraints { make in
             make.top.equalTo(chartBackgroundView.snp.bottom).offset(20)
-            make.leading.equalToSuperview().offset(leftOffset)
-            make.trailing.equalToSuperview().offset(rightOffset)
-            make.height.equalTo(100) // Set height as 100
-            
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(150)
         }
-        
+
+        weatherCollectionViewTitle.snp.makeConstraints { make in
+            make.top.equalTo(weatherCollectionBackgroundView).offset(10)
+            make.leading.equalTo(weatherCollectionBackgroundView).offset(leftOffset)
+        }
+
         weatherCollectionView.snp.updateConstraints { make in
-            make.edges.equalTo(weatherCollectionBackgroundView)
+            make.top.equalTo(weatherCollectionViewTitle.snp.bottom).offset(10)
+            make.left.right.bottom.equalTo(weatherCollectionBackgroundView)
         }
-        
         
     }
     
@@ -229,6 +256,18 @@ extension DetailViewController {
                 print(indexPath)
             })
             .disposed(by: disposeBag)
+    }
+}
+
+// MARK: CollectionView Delegate
+extension DetailViewController: UICollectionViewDelegateFlowLayout {
+    // RxDataSources에서 Cell의 크기를 구할 수 없어서 Delegate패턴 사용
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 100, height: 100)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
     }
 }
 
