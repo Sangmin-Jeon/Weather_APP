@@ -29,11 +29,19 @@ class DetailViewController: ViewController {
         return titleBackgroundView
     }()
     
-    let titleView: UILabel = {
-        let titleView = UILabel()
-        titleView.font = UIFont().happiness(size: 20, type: .title)
-        titleView.textColor = .black
-        return titleView
+    let titleLabel: UILabel = {
+        let titleLabel = UILabel()
+        titleLabel.font = UIFont().happiness(size: 20, type: .title)
+        titleLabel.textColor = .black
+        return titleLabel
+    }()
+    
+    let menuButton: UIButton = {
+        let menuButton = UIButton(type: .system)
+        menuButton.setImage(UIImage(systemName: "line.horizontal.3"), for: .normal)
+        menuButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        menuButton.tintColor = .darkGray
+        return menuButton
     }()
     
     let chartBackgroundView: UIView = {
@@ -116,7 +124,7 @@ class DetailViewController: ViewController {
         weatherCollectionView.delegate = self
         weatherCollectionView.register(WeatherCollectionViewCell.self, forCellWithReuseIdentifier: "WeatherCollectionViewCell")
         
-        viewModel.getchartData(data: weatherData)
+        viewModel.menuType = .temp // 타입에 따른 데이터 세팅
         setupLayout()
         bindData()
         bindCollectionView()
@@ -126,7 +134,8 @@ class DetailViewController: ViewController {
     private func setupLayout() {
         view.addSubview(contentView)
         contentView.addSubview(titleBackgroundView)
-        titleBackgroundView.addSubview(titleView)
+        titleBackgroundView.addSubview(titleLabel)
+        titleBackgroundView.addSubview(menuButton)
         contentView.addSubview(chartBackgroundView)
         chartBackgroundView.addSubview(chartViewTitle)
         chartBackgroundView.addSubview(chartView)
@@ -145,10 +154,15 @@ class DetailViewController: ViewController {
             make.height.equalTo(50)
         }
         
-        titleView.text = weatherData.first?.key.convertMonthNDay()
-        titleView.snp.makeConstraints { make in
+        titleLabel.text = weatherData.first?.key.convertMonthNDay()
+        titleLabel.snp.makeConstraints { make in
             make.centerY.equalTo(titleBackgroundView)
             make.leading.equalToSuperview().offset(10)
+        }
+        
+        menuButton.snp.makeConstraints { make in
+            make.centerY.equalTo(titleBackgroundView)
+            make.trailing.equalToSuperview().offset(-15)
         }
         
         chartBackgroundView.snp.makeConstraints { make in
@@ -189,6 +203,24 @@ class DetailViewController: ViewController {
     }
     
     private func bindData() {
+        menuButton.rx.tap
+            .subscribe(onNext: {
+                let menu = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                
+                let action1 = UIAlertAction(title: "날씨 기온", style: .default) { [weak self] _ in
+                    self?.viewModel.menuType = .temp
+                }
+                let action2 = UIAlertAction(title: "기압", style: .default) { [weak self] _ in
+                    self?.viewModel.menuType = .pressure
+                }
+                
+                menu.addAction(action1)
+                menu.addAction(action2)
+                
+                self.present(menu, animated: true, completion: nil)
+            })
+            .disposed(by: disposeBag)
+        
         viewModel.chartData
             .map { (values) -> LineChartData in
                 let temp = self.setChart(values: values)
@@ -202,13 +234,24 @@ class DetailViewController: ViewController {
     // chart데이터 및 UI 세팅
     private func setChart(values: [TemperatureData]) -> LineChartDataSet {
         // Chart에 표시할 데이터
-        let highEntries = values.enumerated().map { (index, temp) -> ChartDataEntry in
-            if let getTemp = Double(temp.temp) {
-                self.xAxisList.append(temp.dt.convertHour())
-                return ChartDataEntry(x: Double(index), y: getTemp)
+        var highEntries = [ChartDataEntry]()
+        switch viewModel.menuType {
+        case .temp:
+            highEntries = values.enumerated().map { (index, temp) -> ChartDataEntry in
+                if let getTemp = Double(temp.temp ?? "") {
+                    self.xAxisList.append(temp.dt.convertHour())
+                    return ChartDataEntry(x: Double(index), y: getTemp)
+                }
+                return ChartDataEntry()
+               
             }
-            return ChartDataEntry()
-           
+        case .pressure:
+            highEntries = values.enumerated().map { (index, temp) -> ChartDataEntry in
+                let getPressure =  Double(temp.pressure ?? 0)
+                self.xAxisList.append(temp.dt.convertHour())
+                return ChartDataEntry(x: Double(index), y: getPressure)
+                
+            }
         }
         
         // Chart UI 정보 세팅
