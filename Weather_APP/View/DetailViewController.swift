@@ -208,10 +208,18 @@ class DetailViewController: ViewController {
                 let menu = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
                 
                 let action1 = UIAlertAction(title: "날씨 기온", style: .default) { [weak self] _ in
-                    self?.viewModel.menuType = .temp
+                    guard let self = self else { return }
+                    if self.viewModel.menuType != .temp {
+                        self.viewModel.menuType = .temp
+                        self.chartViewTitle.text = String("\(String(describing: self.viewModel.menuType.rawValue)) 차트")
+                    }
                 }
                 let action2 = UIAlertAction(title: "기압", style: .default) { [weak self] _ in
-                    self?.viewModel.menuType = .pressure
+                    guard let self = self else { return }
+                    if self.viewModel.menuType != .pressure {
+                        self.viewModel.menuType = .pressure
+                        self.chartViewTitle.text = String("\(String(describing: self.viewModel.menuType.rawValue)) 차트")
+                    }
                 }
                 
                 menu.addAction(action1)
@@ -255,7 +263,7 @@ class DetailViewController: ViewController {
         }
         
         // Chart UI 정보 세팅
-        let tempSet = LineChartDataSet(entries: highEntries, label: "기온정보")
+        let tempSet = LineChartDataSet(entries: highEntries, label: "\(viewModel.menuType.rawValue)정보")
         tempSet.setColor(UIColor(named: "SkyBlue")!.withAlphaComponent(1))
         tempSet.setCircleColor(.gray)
         tempSet.circleRadius = 5.0

@@ -11,9 +11,9 @@ import RxRelay
 import RxDataSources
 import Charts
 
-enum MenuType {
-    case temp
-    case pressure
+enum MenuType: String {
+    case temp = "기온"
+    case pressure = "기압"
 }
 
 struct TemperatureData {
