@@ -7,9 +7,6 @@
    
 * **개인 프로젝트**
 
-* **기간**
-    * 2023.05.10 ~ 
-
 * **Tech/framework used**
     * Language: `Swift`
     * Framework: `UIKit`
