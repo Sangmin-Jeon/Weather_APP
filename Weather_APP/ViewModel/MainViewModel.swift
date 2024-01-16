@@ -52,6 +52,7 @@ class MainViewModel {
                 }
             )
             .disposed(by: disposeBag)
+        
     }
      
     // Forecast 날씨 데이터 불러오기
@@ -127,4 +128,18 @@ extension NetworkManager {
         ]
         return get(path: path, parameters: parameters)
     }
+    
+    // MARK: 현재 대기 정보
+    func getAirPollution(latitude: Double, longitude: Double) -> Observable<AirPollutionModel> {
+        let path = String("/data/2.5/air_pollution")
+        let parameters: Parameters = [
+            "lat": latitude,
+            "lon": longitude,
+            "appid": APIManager.shared.apiKey,
+            "lang": "kr"
+        ]
+        return get(path: path, parameters: parameters)
+    }
 }
+
+
