@@ -98,7 +98,7 @@
     Cell에 표시해주었습니다.
     이 부분은 Cell의 크기를 설정해주기 위해서 `RxDataSources`와 `Delegate패턴`을 같이 사용하여 구현하였습니다.
 
-   * TODO
-   1. 대기 정보 표시
+* TODO
+   * 대기 정보 표시
  
     
