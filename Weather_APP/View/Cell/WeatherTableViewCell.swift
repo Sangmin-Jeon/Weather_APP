@@ -51,7 +51,7 @@ class WeatherTableViewCell: UITableViewCell {
         cellBackgroundView.addSubview(titleLabel)
         cellBackgroundView.addSubview(maxTempLabel)
         cellBackgroundView.addSubview(minTempLabel)
-        
+
         cellBackgroundView.snp.makeConstraints { make in
             make.top.equalTo(contentView.snp.top).offset(10) // top 간격을 10으로 설정
             make.bottom.equalTo(contentView.snp.bottom).offset(-10) // bottom 간격을 10으로 설정

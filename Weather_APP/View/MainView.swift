@@ -1,19 +1,17 @@
 //
-//  MainViewController.swift
+//  MainView.swift
 //  Weather_APP
 //
-//  Created by 전상민 on 2023/05/10.
+//  Created by 전상민 on 4/1/24.
 //
 
 import UIKit
 import RxSwift
-import RxCocoa
 import RxDataSources
 import SnapKit
-import Kingfisher
 import Lottie
 
-class MainViewController: ViewController {
+class MainView: UIView {
     private let headerView: UIView = {
         let headerView = UIView()
         return headerView
@@ -97,6 +95,11 @@ class MainViewController: ViewController {
         weatherTableView.backgroundColor = .clear
         return weatherTableView
     }()
+    
+    func getWeatherTableView() -> UITableView {
+        return weatherTableView
+    }
+    
     private let animationView_1: LottieAnimationView = {
         // Lottie파일 다운받아 사용
         let animationView = LottieAnimationView(name: "FullBackgroundLottie")
@@ -111,45 +114,41 @@ class MainViewController: ViewController {
         return animationView
     }()
     
-    private let viewModel = MainViewModel()
+    var infoData: MainInfo? {
+        willSet(new) {
+            updateLayout(data: new)
+        }
+    }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        #if targetEnvironment(simulator)
-        // 시뮬레이터일 경우 서울로 고정
-        viewModel.getWeatherData(latitude: 37.5665, longitude: 126.9780)
-        viewModel.getHourlyWeatherData(latitude: 37.5665, longitude: 126.9780)
-        #else
-        self.getLocation()
-        #endif
+    override init(frame: CGRect) {
+        super.init(frame: .zero)
         
         weatherTableView.register(WeatherTableViewCell.self, forCellReuseIdentifier: "WeatherTableViewCell")
         weatherTableView.backgroundColor = .white.withAlphaComponent(0.5)
-        weatherTableView.separatorStyle = .none
-
-        self.setupLayout()
-        self.bindData()
-        self.bindTableView()
+        // TODO: 여기가 아니라 controller로 빼야 작동함 여기서 해결해볼것
+        // 이거 해결하면 AutoLayout이슈도 해결됨
+        // weatherTableView.separatorStyle = .none
+        
+        setupLayout()
         
         self.animationView_1.play()
         self.animationView_1.loopMode = .loop
         self.animationView_2.play()
         self.animationView_2.loopMode = .loop
-        
-        
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+    
+    deinit {
         self.animationView_1.stop()
         self.animationView_2.stop()
     }
-
+    
     
     private func setupLayout() {
-        view.addSubview(animationView_1)
+        self.addSubview(animationView_1)
         animationView_1.addSubview(weatherTableView)
         weatherTableView.addSubview(headerView)
         headerView.addSubview(cardView)
@@ -222,132 +221,16 @@ class MainViewController: ViewController {
         
     }
     
-    // MARK: 현재 날씨데이터 바인딩
-    private func bindData() {
-        // 현재 날씨 정보 표시
-        viewModel.weatherData
-            .compactMap { $0 }
-            .subscribe(onNext: { [weak self] data in
-                guard let self = self else { return }
-                if let first = data.weather.first,
-                   let url = URL(string: "https://openweathermap.org/img/wn/\(first.icon)@2x.png") {
-                    self.weatherIconImageView.kf.setImage(with: url)
-                    
-                    self.currentRegion.text = data.name
-                    self.temperatureLabel.text = "온도 \(data.main.temp.kelvinToCelsius())°C"
-                    self.pressureLabel.text = "기압 \(data.main.pressure) hPa"
-                    self.humidityLabel.text = "습도 \(data.main.humidity)%"
-                    self.descriptionLabel.text = "현재 날씨 \(String(first.description))입니다."
-                }
-            })
-            .disposed(by: disposeBag)
-        
-//        viewModel.weatherData
-//            .compactMap { $0 }
-//            .map { "습도 : \($0.main.humidity)%" }
-//            .bind(to: humidityLabel.rx.text)
-//            .disposed(by: disposeBag)
-        
-        // 에러 메세지 처리 팝업
-        viewModel.errorMessage
-            .flatMap { [weak self] errorMessage -> Observable<PopupType> in
-                guard let self = self else { return .empty() }
-                return self.showPopup(
-                    title: errorMessage,
-                    message: "",
-                    confirm: "확인"
-                )
-            }
-            .subscribe(onNext: { state in
-                if state == .confirm {
-                    // 확인
-                }
-                else {
-                    // 취소
-                }
-            })
-            .disposed(by: disposeBag)
-    
+    private func updateLayout(data: MainInfo?) {
+        guard let data = data else { return }
+        self.weatherIconImageView.kf.setImage(with: data.imgUrl)
+        self.currentRegion.text = data.name
+        self.temperatureLabel.text = data.temp
+        self.pressureLabel.text = data.pressure
+        self.humidityLabel.text = data.humidity
+        self.descriptionLabel.text = data.desc
+
     }
-    
-    // GPS정보 받아 오기
-    func getLocation() {
-        curLocation.subscribe(
-            onNext: { [weak self] location in
-                guard let self = self else { return }
-                // 위도, 경도
-                if let lat = location[.lat], let lon = location[.lon] {
-                    self.viewModel.getWeatherData(latitude: lat, longitude: lon)
-                    self.viewModel.getHourlyWeatherData(latitude: lat, longitude: lon)
-                }
-            },
-            onError: { [weak self] error in
-                guard let self = self else { return }
-                self.errorMessage.onNext(error.localizedDescription)
-            }
-        )
-        .disposed(by: disposeBag)
-    }
-    
+
 }
 
-extension MainViewController {
-    // MARK: 테이블 뷰 데이터 바인딩
-    func bindTableView() {
-        // weatherSections, 테이블뷰에 바인딩
-        let dataSource = RxTableViewSectionedReloadDataSource<WeatherSectionModel>(configureCell: { (_, tableView, indexPath, element) in
-            let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherTableViewCell") as! WeatherTableViewCell
-            cell.updateCell(key: element.date, value: element.weatherItems)
-            cell.backgroundColor = .clear
-            return cell
-        }, titleForHeaderInSection: { dataSource, sectionIndex in
-            dataSource[sectionIndex].header
-        })
-        
-        // weatherList를 WeatherSectionModel 배열로 변환
-        viewModel.weatherList
-            .map { dict in
-                let items = dict.map { WeatherItemModel(date: $0.key, weatherItems: $0.value) }
-                let sorted = items.sorted(by: { $0.date < $1.date })
-                return [WeatherSectionModel(header: "일기예보", items: sorted)]
-            }
-            .bind(to: viewModel.weatherSections)
-            .disposed(by: disposeBag)
-        
-        // weatherSections, weatherTableView에 바인딩
-        viewModel.weatherSections
-            .bind(to: weatherTableView.rx.items(dataSource: dataSource))
-            .disposed(by: disposeBag)
-        
-        // 선택된 cell 처리
-        weatherTableView.rx.itemSelected
-            .subscribe(onNext: { [weak self] indexPath in
-                guard let self = self else { return }
-                self.weatherTableView.deselectRow(at: indexPath, animated: false)
-                
-                viewModel.getSelctedItemIndex(index: indexPath.row) { [weak self] item in
-                    let detailViewController = DetailViewController()
-                    detailViewController.weatherData = item
-                    self?.present(detailViewController, animated: true, completion: nil)
-                    
-                }
-                
-            })
-            .disposed(by: disposeBag)
-        
-//        viewModel.weatherList
-//            .map { $0.sorted(by: { $0.key < $1.key }) } // dict 정렬
-//            .bind(to: weatherTableView.rx.items(
-//                cellIdentifier: "WeatherTableViewCell",
-//                cellType: WeatherTableViewCell.self)
-//            ) { _, element, cell in
-//                let (key, value) = element
-//                cell.backgroundColor = .clear
-//                cell.updateCell(key: key, value: value)
-//
-//            }
-//            .disposed(by: disposeBag)
-        
-            
-    }
-}
