@@ -9,18 +9,22 @@ import Foundation
 import RxSwift
 import Alamofire
 
+struct MyLocation {
+    let latitude: Double
+    let longitude: Double
+}
+
 class NetworkManager {
-    
-    private let baseURL = "https://api.openweathermap.org"
-    
     static let shared = NetworkManager()
     
-    func get<T: Codable>(path: String, parameters: Parameters) -> Observable<T> {
-        return request(path: path, method: .get, parameters: parameters)
+    private let baseURL = String("https://api.openweathermap.org")
+    
+    func get<T: Codable>(path: String, myLocation: MyLocation) -> Observable<T> {
+        return request(path: path, method: .get, myLocation: myLocation)
     }
     
-    func post<T: Codable>(path: String, parameters: Parameters) -> Observable<T> {
-        return request(path: path, method: .post, parameters: parameters)
+    func post<T: Codable>(path: String, myLocation: MyLocation) -> Observable<T> {
+        return request(path: path, method: .post, myLocation: myLocation)
     }
     
 }
@@ -28,11 +32,17 @@ class NetworkManager {
 extension NetworkManager {
     private func request<T: Codable>(path: String,
                                      method: HTTPMethod,
-                                     parameters: Parameters? = nil) -> Observable<T> {
-        
+                                     myLocation: MyLocation) -> Observable<T> {
         guard let url = URL(string: baseURL.appending(path)) else {
             return Observable.error(NSError(domain: "Invalid URL", code: -1, userInfo: nil))
         }
+        
+        let parameters: Parameters = [
+            "lat": myLocation.latitude,
+            "lon": myLocation.longitude,
+            "appid": APIManager.shared.apiKey,
+            "lang": "kr"
+        ]
         
         return Observable.create { observer -> Disposable in
             let request = AF.request(url, method: method, parameters: parameters)

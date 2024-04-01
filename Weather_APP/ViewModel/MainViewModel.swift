@@ -42,7 +42,8 @@ class MainViewModel {
 
     // 현재 날씨 데이터 불러오기
     func getWeatherData(latitude: Double, longitude: Double) {
-        NetworkManager.shared.getWeather(latitude: latitude, longitude: longitude)
+        let myLocation = MyLocation(latitude: latitude, longitude: longitude)
+        NetworkManager.shared.getWeather(myLocation: myLocation)
             .subscribe(
                 onNext: { [weak self] weatherData in
                     self?.weatherData.accept(weatherData)
@@ -57,7 +58,8 @@ class MainViewModel {
      
     // Forecast 날씨 데이터 불러오기
     func getHourlyWeatherData(latitude: Double, longitude: Double) {
-        NetworkManager.shared.getForecastWeather(latitude: latitude, longitude: longitude)
+        let myLocation = MyLocation(latitude: latitude, longitude: longitude)
+        NetworkManager.shared.getForecastWeather(myLocation: myLocation)
             .subscribe(
                 onNext: { [weak self] weatherData in
                     guard let self = self else { return }
@@ -102,44 +104,4 @@ class MainViewModel {
     }
     
 }
-
-extension NetworkManager {
-    // MARK: 현재 날씨 예보
-    func getWeather(latitude: Double, longitude: Double) -> Observable<WeatherModel> {
-        let path = String("/data/2.5/weather")
-        let parameters: Parameters = [
-            "lat": latitude,
-            "lon": longitude,
-            "appid": APIManager.shared.apiKey,
-            "lang": "kr"
-        ]
-        
-        return get(path: path, parameters: parameters)
-    }
-    
-    // MARK: 5일간 날씨 예보
-    func getForecastWeather(latitude: Double, longitude: Double) -> Observable<ForecastWeatherModel> {
-        let path = String("/data/2.5/forecast")
-        let parameters: Parameters = [
-            "lat": latitude,
-            "lon": longitude,
-            "appid": APIManager.shared.apiKey,
-            "lang": "kr"
-        ]
-        return get(path: path, parameters: parameters)
-    }
-    
-    // MARK: 현재 대기 정보
-    func getAirPollution(latitude: Double, longitude: Double) -> Observable<AirPollutionModel> {
-        let path = String("/data/2.5/air_pollution")
-        let parameters: Parameters = [
-            "lat": latitude,
-            "lon": longitude,
-            "appid": APIManager.shared.apiKey,
-            "lang": "kr"
-        ]
-        return get(path: path, parameters: parameters)
-    }
-}
-
 
