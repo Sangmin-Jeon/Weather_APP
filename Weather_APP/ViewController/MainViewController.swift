@@ -21,8 +21,7 @@ struct MainInfo {
 }
 
 class MainViewController: ViewController {
-    
-    private let mainView = MainView(frame: CGRect.zero)
+    private var mainView: MainView!
     private let viewModel = MainViewModel()
     
     override func viewDidLoad() {
@@ -35,14 +34,16 @@ class MainViewController: ViewController {
         self.getLocation()
         #endif
         
+        mainView = MainView(frame: CGRect.zero)
         view.addSubview(mainView)
         mainView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.top.bottom.equalToSuperview()
         }
         
+        let tabelView = mainView.getWeatherTableView()
         self.bindData()
-        self.bindTableView(weatherTableView: mainView.getWeatherTableView())
+        self.bindTableView(weatherTableView: tabelView)
         
     }
     
@@ -55,13 +56,13 @@ class MainViewController: ViewController {
                 guard let self = self else { return }
                 if let first = data.weather.first,
                    let url = URL(string: "https://openweathermap.org/img/wn/\(first.icon)@2x.png") {
-                    mainView.infoData = MainInfo(
+                    self.mainView.infoData = MainInfo(
                         imgUrl: url,
                         name: data.name,
                         temp: "온도 \(data.main.temp.kelvinToCelsius())°C",
                         pressure: "기압 \(data.main.pressure) hPa",
                         humidity: "습도 \(data.main.humidity)%",
-                        desc:"현재 날씨 \(String(first.description))입니다."
+                        desc: "현재 날씨 \(String(first.description))입니다."
                     )
                 }
             })

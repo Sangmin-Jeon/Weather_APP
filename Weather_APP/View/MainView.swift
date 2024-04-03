@@ -101,13 +101,11 @@ class MainView: UIView {
     }
     
     private let animationView_1: LottieAnimationView = {
-        // Lottie파일 다운받아 사용
         let animationView = LottieAnimationView(name: "FullBackgroundLottie")
         animationView.contentMode = .scaleAspectFill
         return animationView
     }()
     private let animationView_2: LottieAnimationView = {
-        // Lottie파일 다운받아 사용
         let animationView = LottieAnimationView(name: "backgroundLottie")
         animationView.layer.cornerRadius = CGFloat(15)
         animationView.contentMode = .scaleAspectFill
@@ -125,9 +123,7 @@ class MainView: UIView {
         
         weatherTableView.register(WeatherTableViewCell.self, forCellReuseIdentifier: "WeatherTableViewCell")
         weatherTableView.backgroundColor = .white.withAlphaComponent(0.5)
-        // TODO: 여기가 아니라 controller로 빼야 작동함 여기서 해결해볼것
-        // 이거 해결하면 AutoLayout이슈도 해결됨
-        // weatherTableView.separatorStyle = .none
+        weatherTableView.separatorStyle = .none
         
         setupLayout()
         
@@ -139,6 +135,7 @@ class MainView: UIView {
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
+        
     }
     
     deinit {
