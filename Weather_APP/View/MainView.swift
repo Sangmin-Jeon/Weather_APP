@@ -7,7 +7,6 @@
 
 import UIKit
 import RxSwift
-import RxDataSources
 import SnapKit
 import Lottie
 
@@ -92,7 +91,9 @@ class MainView: UIView {
         weatherTableView.isScrollEnabled = true
         weatherTableView.showsVerticalScrollIndicator = false
         weatherTableView.bounces = false
-        weatherTableView.backgroundColor = .clear
+        weatherTableView.backgroundColor = .white.withAlphaComponent(0.5)
+        weatherTableView.register(WeatherTableViewCell.self, forCellReuseIdentifier: "WeatherTableViewCell")
+        weatherTableView.separatorStyle = .none
         return weatherTableView
     }()
     
@@ -120,17 +121,8 @@ class MainView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
-        
-        weatherTableView.register(WeatherTableViewCell.self, forCellReuseIdentifier: "WeatherTableViewCell")
-        weatherTableView.backgroundColor = .white.withAlphaComponent(0.5)
-        weatherTableView.separatorStyle = .none
-        
         setupLayout()
-        
-        self.animationView_1.play()
-        self.animationView_1.loopMode = .loop
-        self.animationView_2.play()
-        self.animationView_2.loopMode = .loop
+        setLottie()
     }
     
     required init?(coder: NSCoder) {
@@ -141,6 +133,14 @@ class MainView: UIView {
     deinit {
         self.animationView_1.stop()
         self.animationView_2.stop()
+    }
+    
+    private func setLottie() {
+        self.animationView_1.play()
+        self.animationView_1.loopMode = .loop
+        self.animationView_2.play()
+        self.animationView_2.loopMode = .loop
+        
     }
     
     

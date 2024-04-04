@@ -52,4 +52,9 @@ extension String {
             return ""
         }
     }
+    
+    func getWeatherIcon() -> String {
+        "https://openweathermap.org/img/wn/\(self)@2x.png"
+    }
+    
 }

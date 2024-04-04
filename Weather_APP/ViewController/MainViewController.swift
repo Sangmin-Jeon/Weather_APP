@@ -21,7 +21,7 @@ struct MainInfo {
 }
 
 class MainViewController: ViewController {
-    private var mainView: MainView!
+    private var mainView: MainView?
     private let viewModel = MainViewModel()
     
     override func viewDidLoad() {
@@ -35,28 +35,29 @@ class MainViewController: ViewController {
         #endif
         
         mainView = MainView(frame: CGRect.zero)
-        view.addSubview(mainView)
-        mainView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-            make.top.bottom.equalToSuperview()
+        if let mainView = mainView {
+            view.addSubview(mainView)
+            mainView.snp.makeConstraints { make in
+                make.leading.trailing.equalToSuperview()
+                make.top.bottom.equalToSuperview()
+            }
+            let tabelView = mainView.getWeatherTableView()
+            self.updateData(mainView)
+            self.updateTableView(tabelView)
+            
         }
-        
-        let tabelView = mainView.getWeatherTableView()
-        self.bindData()
-        self.bindTableView(weatherTableView: tabelView)
         
     }
     
     // MARK: 현재 날씨데이터 바인딩
-    private func bindData() {
+    private func updateData(_ mainView: MainView) {
         // 현재 날씨 정보 표시
         viewModel.weatherData
             .compactMap { $0 }
-            .subscribe(onNext: { [weak self] data in
-                guard let self = self else { return }
+            .subscribe(onNext: { data in
                 if let first = data.weather.first,
-                   let url = URL(string: "https://openweathermap.org/img/wn/\(first.icon)@2x.png") {
-                    self.mainView.infoData = MainInfo(
+                   let url = URL(string: first.icon.getWeatherIcon()) {
+                    mainView.infoData = MainInfo(
                         imgUrl: url,
                         name: data.name,
                         temp: "온도 \(data.main.temp.kelvinToCelsius())°C",
@@ -120,8 +121,8 @@ class MainViewController: ViewController {
 // TODO: tableView에서 이벤트 받는 코드 MainView로 이동
 // 데이터 받아서 넘기는 부분은 여기에서 수정
 extension MainViewController {
-    // MARK: 테이블 뷰 데이터 바인딩
-    func bindTableView(weatherTableView: UITableView) {
+    // MARK: 테이블 뷰 업데이트
+    func updateTableView(_ weatherTableView: UITableView) {
         // weatherSections, 테이블뷰에 바인딩
         let dataSource = RxTableViewSectionedReloadDataSource<WeatherSectionModel>(configureCell: { (_, tableView, indexPath, element) in
             let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherTableViewCell") as! WeatherTableViewCell
